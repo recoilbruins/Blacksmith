@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : Item
 {
     public WeaponSO weaponSO;
 
@@ -14,10 +14,10 @@ public class Weapon : MonoBehaviour
     public int lightAttackMaxCombo;
 
     [SerializeField] private Collider weaponCollider;
-    [SerializeField] private Collider leftHandCollider;
-    [SerializeField] private Collider rightHandCollider;
 
     [SerializeField] private WeaponCollision[] weaponCollisions;
+
+    private bool isAttacking = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -25,30 +25,34 @@ public class Weapon : MonoBehaviour
         weaponSO.defaultDamage = weaponSO.weaponDamage;
     }
 
-    public void EnableWeaponColliders()
+    public void EnableWeaponCollider()
     {
-        if(isUnarmed)
-        {
-            leftHandCollider.enabled = true;
-            rightHandCollider.enabled = true;
-        }
-        else
-        {
-            weaponCollider.enabled = true;
-        }
+        weaponCollider.enabled = true;
     }
 
-    public void DisableWeaponColliders()
+    public void StartAttack()
     {
-        if (isUnarmed)
-        {
-            leftHandCollider.enabled = false;
-            rightHandCollider.enabled = false;
-        }
-        else
-        {
-            weaponCollider.enabled = false;
-        }
+        EnableWeaponCollider();
+        isAttacking = true;
+    }
+
+    public void EndAttack()
+    {
+        DisableWeaponCollider();
+        isAttacking = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isAttacking) return;
+
+
+        
+    }
+
+    public void DisableWeaponCollider()
+    { 
+        weaponCollider.enabled = false;
     }
 
     public void ResetDamage()

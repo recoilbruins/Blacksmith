@@ -1709,8 +1709,60 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4817396953530456555, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1337478811}
+    - targetCorrespondingSourceObject: {fileID: 8689774256346344796, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1337478810}
   m_SourcePrefab: {fileID: 100100000, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+--- !u!1 &1337478808 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8689774256346344796, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+  m_PrefabInstance: {fileID: 1337478807}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1337478809 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4817396953530456555, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+  m_PrefabInstance: {fileID: 1337478807}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1337478810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337478808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8ac54c693e4c342be249b4e13ff3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapons:
+  - {fileID: 1055055082}
+  dualWieldingAOC: {fileID: 22100000, guid: e456441b5b246794684b58ae27cd29e1, type: 2}
+--- !u!114 &1337478811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337478809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c15ea152b39216146b5d5bc7b5940f2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helmet: {fileID: 0}
+  bodyArmor: {fileID: 0}
+  gauntlets: {fileID: 0}
+  belt: {fileID: 0}
+  greaves: {fileID: 0}
+  boots: {fileID: 0}
+  amulet: {fileID: 0}
+  leftRing: {fileID: 0}
+  rightRing: {fileID: 0}
 --- !u!1 &1585855753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,7 +1833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e77abf7181fea4ba3ccb5bd8a41583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentEquippedWeapons: {fileID: 2084518486}
+  currentEquippedWeapons: {fileID: 0}
   animationManager: {fileID: 2084518489}
   animationNames:
   - Unarmed-Attack-L1
@@ -2724,17 +2776,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1133459001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2084518486 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8445730855291724915, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
-  m_PrefabInstance: {fileID: 1337478807}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 692d5fd328160264a9361ee3f6144074, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2084518489 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 775428251, guid: 2497414f892877745abc122a7a14c8b6, type: 3}

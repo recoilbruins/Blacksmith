@@ -14,12 +14,12 @@ namespace RPGCharacterAnims
         [Range(0, 1)] public float leftHandRotationWeight;
         private Transform blendToTransform;
 		private Coroutine co;
-		private CurrentEquippedWeapons currentEquippedWeapons;
+		private EquippedWeapons currentEquippedWeapons;
 
         private void Awake()
         {
             animator = GetComponent<Animator>();
-			currentEquippedWeapons = GetComponent<CurrentEquippedWeapons>();
+			currentEquippedWeapons = GetComponent<EquippedWeapons>();
         }
 
 		/// <summary>

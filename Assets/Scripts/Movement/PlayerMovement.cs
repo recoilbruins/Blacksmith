@@ -85,17 +85,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    public void UpdateAllMovement()
+    public void UpdateAllMovement(float moventSpeedMultiplier)
     {
         HandleFallingAndLanding();
         if (isAnimationLocked) { return; }
-        Movement();
+        Movement(moventSpeedMultiplier);
         Rotation();
         Jump();
         Dodge();
     }
 
-    private void Movement()
+    private void Movement(float moventSpeedMultiplier)
     {
         if (isJumping)
         {
@@ -107,17 +107,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (InputManager.instance.isSprintPressed)
         {
-            moveDirection *= sprintingSpeed;
+            moveDirection *= sprintingSpeed * moventSpeedMultiplier;
         }
         else
         {
             if(InputManager.instance.moveAmount < 0.5f || isBlocking)
             {
-                moveDirection *= walkingSpeed;
+                moveDirection *= walkingSpeed * moventSpeedMultiplier;
             }
             else
             {
-                moveDirection *= runningSpeed;
+                moveDirection *= runningSpeed * moventSpeedMultiplier;
             }
             
         }

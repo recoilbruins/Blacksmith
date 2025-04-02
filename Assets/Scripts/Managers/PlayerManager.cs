@@ -9,14 +9,14 @@ namespace BlacksmithPlayer
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(CurrentEquippedWeapons))]
+    [RequireComponent(typeof(EquippedWeapons))]
     public class PlayerManager : CharacterManager
     {
         
         public static PlayerManager instance;
         private AnimationManager animationManager;
         private PlayerMovement playerMovement;
-        private CurrentEquippedWeapons currentEquippedWeapons;
+        private EquippedWeapons currentEquippedWeapons;
         private PlayerCombat playerCombat;
 
         [Header("Player States")]
@@ -43,7 +43,7 @@ namespace BlacksmithPlayer
             animator = GetComponent<Animator>();
             animationManager = GetComponent<AnimationManager>();
             playerCombat = GetComponent<PlayerCombat>();
-            currentEquippedWeapons = GetComponent<CurrentEquippedWeapons>();
+            currentEquippedWeapons = GetComponent<EquippedWeapons>();
             animationManager.animator = animator;
         }
 
@@ -53,16 +53,16 @@ namespace BlacksmithPlayer
             {
                 if(currentEquippedWeapons.currentWeapons.Length < 2)
                 {
-                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[0]?.weaponSO.animatorOverrideController;
+                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[0].weaponSO.animatorOverrideController;
                 }
                 else
                 {
-                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[1]?.weaponSO.animatorOverrideController;
+                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[1].weaponSO.animatorOverrideController;
                 }
                 animationManager.animator.runtimeAnimatorController = animationManager.currentAOC;
                 if (currentEquippedWeapons.currentWeapons.Length > 1)
                 {
-                    if (currentEquippedWeapons.currentWeapons[1]?.weaponSO.weaponType == WeaponSO.WeaponType.SHIELD) 
+                    if (currentEquippedWeapons.currentWeapons[1].weaponSO.weaponType == WeaponSO.WeaponType.SHIELD) 
                     {
                         SetupShieldAttackAnimations.myInstance.UpdateShieldAttackAnimationsToMainHandWeaponAttacks();
                     }
@@ -75,7 +75,7 @@ namespace BlacksmithPlayer
         private void FixedUpdate()
         {
             playerCombat.PlayerCombatFunctions();
-            playerMovement.UpdateAllMovement();
+            playerMovement.UpdateAllMovement(moveSpeedMultiplier);
         }
 
         private void Update()
@@ -100,7 +100,7 @@ namespace BlacksmithPlayer
             isDodging = playerMovement.isDodging;
             isPrimaryButtonPressed = InputManager.instance.isPrimaryButtonPressed;
             isSecondaryButtonPressed = InputManager.instance.isSecondaryButtonPressed;
-            /*isBlocking = inputManager.isBlockPressed;
+            /*sBlocking = InputManager.instance.isBlockPressed;
             isAttacking = inputManager.isLightAttackPressed;*/
         }
     }

@@ -10,7 +10,7 @@ namespace BlacksmithCombat
     public class PlayerCombat : MonoBehaviour
     {
         [Header("Current Equipped Weapon")]
-        [SerializeField] CurrentEquippedWeapons currentEquippedWeapons;
+        [SerializeField] EquippedWeapons currentEquippedWeapons;
 
         [SerializeField] private HandActionController handActionController;
 
@@ -73,7 +73,7 @@ namespace BlacksmithCombat
         {
             
             // return if player is in the air or jumping
-            if (playerMovement.isJumping || !playerMovement.isGrounded || playerMovement.isDodging) { return; }
+            if (playerMovement.isJumping || !playerMovement.isGrounded /*|| playerMovement.isDodging*/) { return; }
 
             if(InputManager.instance.isPrimaryButtonPressed)
             {

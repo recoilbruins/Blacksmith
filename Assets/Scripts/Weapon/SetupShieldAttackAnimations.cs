@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SetupShieldAttackAnimations : MonoBehaviour
 {
-    [SerializeField] private CurrentEquippedWeapons currentEquippedWeapons;
+    [SerializeField] private EquippedWeapons currentEquippedWeapons;
     [SerializeField] private AnimationManager animationManager;
     [SerializeField] private string[] animationNames;
 

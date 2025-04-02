@@ -4,7 +4,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class CurrentEquippedWeapons : MonoBehaviour
+public class EquippedWeapons : MonoBehaviour
 {
     public Weapon[] currentWeapons;
     public bool areWeaponsSheathed { get; private set; } = false;
@@ -12,6 +12,9 @@ public class CurrentEquippedWeapons : MonoBehaviour
 
     public bool isTwoHandedWeapon { get; private set; } = false;
     public AnimatorOverrideController dualWieldingAOC;
+
+    public float weaponDamage { get; private set; } = 0;
+
 
     public void Awake()
     {
@@ -76,5 +79,16 @@ public class CurrentEquippedWeapons : MonoBehaviour
         }
     }
 
+    private void CalculateWeaponDamage()
+    {
+        if (isDualWield)
+        {
+            weaponDamage = (currentWeapons[0].weaponSO.weaponDamage + currentWeapons[1].weaponSO.weaponDamage) / 2;
+        }
+        else
+        {
+            weaponDamage = currentWeapons[0].weaponSO.weaponDamage;
+        }
+    }
 
 }

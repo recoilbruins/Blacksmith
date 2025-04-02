@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwapWeapons : MonoBehaviour
 {
-    [SerializeField] CurrentEquippedWeapons currentEquippedWeapons;
+    [SerializeField] EquippedWeapons currentEquippedWeapons;
     public Transform mainHandTransform;
     public Transform offHandTransform;
     public void SwapMainWeapon(Weapon newWeapon)

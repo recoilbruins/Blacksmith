@@ -12,10 +12,25 @@ namespace BlacksmithCharacter
         public float intelligence { get; set; } = 1;
         public float luck { get; set; } = 1;
 
+        public float moveSpeedMultiplier { get; set; } = 1;
+        public float attackSpeedMultiplier { get; set; } = 1;
+
+        public EquippedArmor equippedArmor;
+        public EquippedWeapons equippedWeapons;
+
         public Animator animator;
         public Rigidbody rb;
         public CapsuleCollider capsuleCollider;
 
+        public override int TakeDamage(float damage)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Die()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 

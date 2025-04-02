@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HandActionController : MonoBehaviour
 {
-    [SerializeField] private CurrentEquippedWeapons currentEquippedWeapons;
+    [SerializeField] private EquippedWeapons currentEquippedWeapons;
     [field:SerializeField] public bool isBlocking { get; set; } = false;
     [field:SerializeField] public bool leftHandAttack { get; set; } = false;
     [field:SerializeField] public bool rightHandAttack { get; set; } = false;
