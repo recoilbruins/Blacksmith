@@ -14,7 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatorOverrideController: {fileID: 22100000, guid: 171279d56abbfee448b9ec17ec2f3679, type: 2}
   rarity: 0
-  weaponType: 1
+  weaponType: 2
+  LIGHT_ATTACK_ONE_ANIMATION_NAME: 
+  LIGHT_ATTACK_TWO_ANIMATION_NAME: 
+  HEAVY_ATTACK_ONE_ANIMATION_NAME: 
+  HEAVY_ATTACK_TWO_ANIMATION_NAME: 
+  JUMP_ATTACK_ANIMATION_NAME: 
+  SPRINT_ATTACK_ANIMATION_NAME: 
+  BLOCK__ANIMATION_NAME: 
   attackSpeed: 1
+  lightAttackMaxCombo: 6
+  lightAttackHalfCombo: 3
   weaponDamage: 5
   defaultDamage: 5

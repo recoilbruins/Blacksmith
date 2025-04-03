@@ -39,12 +39,12 @@ namespace BlackSmithAnimator
         public void PlayAttackAnimations(string attackName, int comboVal, bool isAnimationLocked = true, bool isUsingRootMotion = true)
         {
             animator.SetTrigger(attackName);
-            animator.SetInteger("AttackValue", comboVal);
+            animator.SetInteger("ComboCounter", comboVal);
             animator.SetBool("isAnimationLocked", isAnimationLocked);
             animator.SetBool("isUsingRootMotion", isUsingRootMotion);
 
             //animator.CrossFade(attackName, 0.25f);
-        }
+        } 
 
         private void OnAnimatorMove()
         {

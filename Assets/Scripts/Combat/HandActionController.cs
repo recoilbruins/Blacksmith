@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HandActionController : MonoBehaviour
 {
-    [SerializeField] private EquippedWeapons currentEquippedWeapons;
+    [SerializeField] private EquippedWeapons equippedWeapons;
     [field:SerializeField] public bool isBlocking { get; set; } = false;
     [field:SerializeField] public bool leftHandAttack { get; set; } = false;
     [field:SerializeField] public bool rightHandAttack { get; set; } = false;
@@ -32,9 +32,9 @@ public class HandActionController : MonoBehaviour
     {
         if(isRightHand)
         {
-            if (currentEquippedWeapons.currentWeapons.Length < 1) return;
+            if (equippedWeapons.currentWeapons.Length < 1) return;
 
-            Weapon weapon = currentEquippedWeapons.currentWeapons[0];
+            Weapon weapon = equippedWeapons.currentWeapons[0];
             if (weapon == null) { Debug.LogError("No Weapon Equipped in main hand"); return; }
 
             switch (weapon.weaponSO.weaponType)
@@ -45,6 +45,9 @@ public class HandActionController : MonoBehaviour
                 case WeaponSO.WeaponType.TWOHANDWEAPON:
                     twoHandedAttack = true;
                     break;
+                case WeaponSO.WeaponType.UNARMED:
+                    rightHandAttack = true;
+                    break;
                 case WeaponSO.WeaponType.SPELL:
                     castRightHand = true;
                     break;
@@ -52,13 +55,20 @@ public class HandActionController : MonoBehaviour
         }
         else
         {
-            if (currentEquippedWeapons.currentWeapons.Length < 2) 
+            if(equippedWeapons.currentWeapons.Length < 2)
             {
-                isBlocking = true;
-                Debug.LogWarning("No Weapon Equipped in off hand, so block with current primary weapon");
+                if(equippedWeapons.currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
+                {
+                    leftHandAttack = true;
+                }
+                else
+                {
+                    Debug.LogWarning("No Weapon Equipped in off hand or your weapon is twohanded, so block with current primary weapon");
+                    isBlocking = true;
+                }
                 return;
             }
-            Weapon weapon = currentEquippedWeapons.currentWeapons[1];
+            Weapon weapon = equippedWeapons.currentWeapons[1];
             switch (weapon.weaponSO.weaponType)
             {
                 case WeaponSO.WeaponType.ONEHANDWEAPON:
@@ -66,6 +76,10 @@ public class HandActionController : MonoBehaviour
                     break;
                 case WeaponSO.WeaponType.TWOHANDWEAPON:
                     isBlocking = true;
+                    break;
+                case WeaponSO.WeaponType.UNARMED:
+                    Debug.Log("light Attack");
+                    leftHandAttack = true;
                     break;
                 case WeaponSO.WeaponType.SPELL:
                     castLeftHand = true;

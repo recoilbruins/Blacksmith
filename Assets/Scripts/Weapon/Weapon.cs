@@ -11,9 +11,7 @@ public class Weapon : Item
     /*public AttackSO[] lightAttackCombo;
     public AttackSO[] heavyAttackCombo;*/
 
-    public int lightAttackMaxCombo;
-
-    [SerializeField] private Collider weaponCollider;
+    [SerializeField] private Collider[] weaponColliders;
 
     [SerializeField] private WeaponCollision[] weaponCollisions;
 
@@ -25,20 +23,23 @@ public class Weapon : Item
         weaponSO.defaultDamage = weaponSO.weaponDamage;
     }
 
-    public void EnableWeaponCollider()
+    public void EnableWeaponColliders()
     {
-        weaponCollider.enabled = true;
+        foreach (Collider collider in weaponColliders)
+        {
+            collider.enabled = true;
+        }
     }
 
     public void StartAttack()
     {
-        EnableWeaponCollider();
+        EnableWeaponColliders();
         isAttacking = true;
     }
 
     public void EndAttack()
     {
-        DisableWeaponCollider();
+        DisableWeaponColliders();
         isAttacking = false;
     }
 
@@ -50,9 +51,12 @@ public class Weapon : Item
         
     }
 
-    public void DisableWeaponCollider()
-    { 
-        weaponCollider.enabled = false;
+    public void DisableWeaponColliders()
+    {
+        foreach (Collider collider in weaponColliders)
+        {
+            collider.enabled = false;
+        }
     }
 
     public void ResetDamage()

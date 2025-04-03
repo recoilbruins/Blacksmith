@@ -46,7 +46,7 @@ public class EquippedWeapons : MonoBehaviour
     {
         if (currentWeapons.Length < 1) { Debug.LogError("currently there is no weapon equipped"); return false; }
         
-        if (currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.TWOHANDWEAPON)
+        if (currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.TWOHANDWEAPON || currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
         {
             return true;
         }
