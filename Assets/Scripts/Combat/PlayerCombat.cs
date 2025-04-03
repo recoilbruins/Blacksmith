@@ -89,7 +89,6 @@ namespace BlacksmithCombat
             }
             else
             {
-                Debug.Log("Stop Blocking");
                 StopBlocking();
                 handActionController.SecondaryHandRelease();
             }
@@ -151,8 +150,11 @@ namespace BlacksmithCombat
 
         private void StopBlocking()
         {
-            animationManager.animator.SetBool(BLOCKING_ATTACK, false);
-            isBlocking = false;
+            if(isBlocking)
+            {
+                isBlocking = false;
+                animationManager.animator.SetBool(BLOCKING_ATTACK, false);
+            }
         }
         
         private void LightAttack(Weapon weapon)

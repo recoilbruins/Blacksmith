@@ -9,7 +9,6 @@ namespace BlacksmithPlayer
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(EquippedWeapons))]
     public class PlayerManager : CharacterManager
     {
         
