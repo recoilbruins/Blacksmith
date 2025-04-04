@@ -1556,6 +1556,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 602b58cb84d99244691066b89f9efa6c, type: 2}
     - target: {fileID: 839252442, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
+      propertyPath: comboResetTimer
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 839252442, guid: 2497414f892877745abc122a7a14c8b6, type: 3}
       propertyPath: equippedWeapons
       value: 
       objectReference: {fileID: 2093815592}

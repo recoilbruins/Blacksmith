@@ -20,7 +20,7 @@ namespace BlacksmithCombat
 
         [Header("Weapon Combo")]
         [SerializeField] private int comboCounter = 0;
-        [SerializeField] private float comboResetTimer = 0.75f;
+        [SerializeField] private float comboResetTimer;
         private float lastClickTime = 0f;
 
         [Header("Script References")]
@@ -184,6 +184,7 @@ namespace BlacksmithCombat
 
             float lastAttackTime = Time.time - lastClickTime;
             
+            Debug.Log("lastAttackTime: " + lastAttackTime + " comboResetTimer: " + comboResetTimer);
 
             if (comboCounter >= weapon.weaponSO.lightAttackMaxCombo || lastAttackTime > comboResetTimer)
             {
