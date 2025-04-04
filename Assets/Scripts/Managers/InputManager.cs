@@ -68,7 +68,7 @@ namespace BlackSmithInput
                 //Left Hand Action
                 //playerControls.PlayerActions.PrimaryHand.started += playerControls => PrimaryHandInputPressed();
                 playerControls.PlayerActions.PrimaryHand.started += playerControls => isPrimaryButtonPressed = true;
-                playerControls.PlayerActions.PrimaryHand.canceled += playerControls => isPrimaryButtonPressed = false;
+                //playerControls.PlayerActions.PrimaryHand.canceled += playerControls => isPrimaryButtonPressed = false;
                 //playerControls.PlayerActions.PrimaryHand.canceled += playerControls => PrimaryHandInputReleased();
                 // Off Hand Action
                 //playerControls.PlayerActions.SecondaryHand.started += playerControls => SecondaryHandInputPressed();

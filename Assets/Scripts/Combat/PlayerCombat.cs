@@ -20,7 +20,7 @@ namespace BlacksmithCombat
 
         [Header("Weapon Combo")]
         [SerializeField] private int comboCounter = 0;
-        [SerializeField] private float comboResetTimer = 1.5f;
+        [SerializeField] private float comboResetTimer = 0.75f;
         private float lastClickTime = 0f;
 
         [Header("Script References")]
@@ -179,19 +179,19 @@ namespace BlacksmithCombat
             }
 
             if (isBlocking || isAttacking) return;
+
+            isAttacking = true;
+
+            float lastAttackTime = Time.time - lastClickTime;
             
 
-            float previousTime = lastClickTime;
-            lastClickTime = Time.time;
-
-            if (comboCounter >= weapon.weaponSO.lightAttackMaxCombo || lastClickTime - previousTime > comboResetTimer)
+            if (comboCounter >= weapon.weaponSO.lightAttackMaxCombo || lastAttackTime > comboResetTimer)
             {
                 EndCurrentCombo();
             }
 
-            comboCounter = (comboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
 
-            if(isRightHand)
+            if (isRightHand)
             {
                 animationManager.PlayAttackAnimations(PRIMARY_ATTACK, comboCounter);
 
@@ -201,9 +201,11 @@ namespace BlacksmithCombat
                 animationManager.PlayAttackAnimations(SECONDARY_ATTACK, comboCounter);
             }
 
-            isAttacking = true;
+            comboCounter = (comboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
 
-            Invoke(nameof(ResetAttack), 0.1f);
+            lastClickTime = Time.time;
+
+            Invoke(nameof(ResetAttack), weapon.weaponSO.attackSpeed);
         }
         private bool AttackAnimationIsCurrentlyPlaying()
         {
