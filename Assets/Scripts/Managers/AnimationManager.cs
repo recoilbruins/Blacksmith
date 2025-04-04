@@ -36,10 +36,26 @@ namespace BlackSmithAnimator
             isDodge = isDodging;
         }
 
-        public void PlayAttackAnimations(string attackName, int comboVal, bool isAnimationLocked = true, bool isUsingRootMotion = true)
+        /// <summary>
+        /// This is for dual wielding / unarmed attacks as you should be able to chain all attacks
+        /// </summary>
+        /// <param name="attackName">name of the trigger</param>
+        /// <param name="comboVal">the value of the combo</param>
+        /// <param name="isRightHand">if you are aatacking with the main hand or off hand</param>
+        /// <param name="isAnimationLocked">locks your animator to this animation</param>
+        /// <param name="isUsingRootMotion">if this animation uses root motion</param>
+        public void PlayAttackAnimations(string attackName, int comboVal, bool isRightHand, bool isAnimationLocked = true, bool isUsingRootMotion = true)
         {
+            if(isRightHand)
+            {
+                animator.SetInteger("rightComboCounter", comboVal);
+            }
+            else
+            {
+                animator.SetInteger("leftComboCounter", comboVal);
+            }
             animator.SetTrigger(attackName);
-            animator.SetInteger("ComboCounter", comboVal);
+            
             animator.SetBool("isAnimationLocked", isAnimationLocked);
             animator.SetBool("isUsingRootMotion", isUsingRootMotion);
 

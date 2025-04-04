@@ -19,9 +19,10 @@ namespace BlacksmithCombat
         public bool isBlocking = false;
 
         [Header("Weapon Combo")]
-        [SerializeField] private int comboCounter = 0;
+        [SerializeField] private int leftComboCounter = 0;
+        [SerializeField] private int rightComboCounter = 0;
         [SerializeField] private float comboResetTimer;
-        private float lastClickTime = 0f;
+        [SerializeField] private float comboTimer = 0f;
 
         [Header("Script References")]
         AnimationManager animationManager;
@@ -59,6 +60,11 @@ namespace BlacksmithCombat
                 offHandWeapon = equippedWeapons.currentWeapons[1];
             }
             EventSubscriptions();
+        }
+
+        private void Update()
+        {
+            ResetComboTimer();
         }
 
         private void EventSubscriptions()
@@ -182,56 +188,19 @@ namespace BlacksmithCombat
 
             isAttacking = true;
 
-            float lastAttackTime = Time.time - lastClickTime;
-            
-            Debug.Log("lastAttackTime: " + lastAttackTime + " comboResetTimer: " + comboResetTimer);
-
-            if (comboCounter >= weapon.weaponSO.lightAttackMaxCombo || lastAttackTime > comboResetTimer)
-            {
-                EndCurrentCombo();
-            }
-
-
             if (isRightHand)
             {
-                animationManager.PlayAttackAnimations(PRIMARY_ATTACK, comboCounter);
-
+                animationManager.PlayAttackAnimations(PRIMARY_ATTACK, rightComboCounter, isRightHand:isRightHand);
+                rightComboCounter = (rightComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
             }
             else
             {
-                animationManager.PlayAttackAnimations(SECONDARY_ATTACK, comboCounter);
+                animationManager.PlayAttackAnimations(SECONDARY_ATTACK, leftComboCounter, isRightHand: isRightHand);
+                leftComboCounter = (leftComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
             }
+            comboTimer = comboResetTimer;
 
-            comboCounter = (comboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
-
-            lastClickTime = Time.time;
-
-            Invoke(nameof(ResetAttack), weapon.weaponSO.attackSpeed);
-        }
-        private bool AttackAnimationIsCurrentlyPlaying()
-        {
-            /*string animationName;
-            
-            if(comboCounter == 0)
-            {
-                animationName = "LightAttack" + 1;
-            }
-            else
-            {
-                animationName = "LightAttack" + comboCounter;
-            }
-
-
-            if (animationManager.animator.GetCurrentAnimatorStateInfo(ATTACKANIMATIONLAYER).IsName(animationName) && animationManager.animator.GetCurrentAnimatorStateInfo(ATTACKANIMATIONLAYER).normalizedTime < mainHandWeapon.weaponSO.attackSpeed)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }*/
-            return false;
-            
+            Invoke("ResetAttacking", 0.35f);
         }
 
         private bool BlockingAnimationIsCurrentlyPlaying()
@@ -246,40 +215,31 @@ namespace BlacksmithCombat
                 return false;
             }
         }
-            
 
-        private void ExitLightAttack()
+        private void ResetComboTimer()
         {
-            /*string animationName;
+            if(comboTimer > 0)
+            {
+                comboTimer -= Time.deltaTime;
 
-            if (comboCounter == 0)
-            {
-                animationName = "LightAttack" + 1;
+                if(comboTimer < 0)
+                {
+                    EndCurrentCombo();
+                }
             }
-            else
-            {
-                animationName = "LightAttack" + comboCounter;
-            }
-
-            if (animationManager.animator.GetCurrentAnimatorStateInfo(ATTACKANIMATIONLAYER).normalizedTime > mainHandWeapon.weaponSO.attackSpeed
-                && animationManager.animator.GetCurrentAnimatorStateInfo(ATTACKANIMATIONLAYER).IsName(animationName))
-            {
-                Debug.Log("Exit Attack");
-                isAttacking = false;
-                Invoke("EndLightAttackCombo", 0.75f);
-            }*/
         }
 
-        void ResetAttack()
+        private void ResetAttacking()
         {
             isAttacking = false;
         }
 
-
         private void EndCurrentCombo()
         {
-            comboCounter = 0;
-            animationManager.animator.SetInteger("ComboCounter", comboCounter);
+            rightComboCounter = 0;
+            leftComboCounter = 0;
+            animationManager.animator.SetInteger("rightComboCounter", rightComboCounter);
+            animationManager.animator.SetInteger("leftComboCounter", leftComboCounter);
         }
 
     }

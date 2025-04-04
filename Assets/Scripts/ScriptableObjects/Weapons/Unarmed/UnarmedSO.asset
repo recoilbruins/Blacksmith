@@ -22,7 +22,7 @@ MonoBehaviour:
   JUMP_ATTACK_ANIMATION_NAME: 
   SPRINT_ATTACK_ANIMATION_NAME: 
   BLOCK__ANIMATION_NAME: 
-  attackSpeed: 0.6
+  attackSpeed: 1.25
   lightAttackMaxCombo: 6
   lightAttackHalfCombo: 3
   weaponDamage: 5

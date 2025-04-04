@@ -5,6 +5,16 @@ using UnityEngine;
 
 public class CombatDamageCaluclator : MonoBehaviour
 {
+    public static CombatDamageCaluclator Instance;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        DontDestroyOnLoad(this.gameObject);
+    }
     public float PhysicalDamageCalculation(CharacterManager attacker, EquippedWeapons attackWeapons, EquippedArmor defenderArmor, CharacterManager defender)
     {
         float damage = 0;
