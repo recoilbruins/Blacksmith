@@ -132,7 +132,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "35e17760-3adb-4442-8aa9-a9b042819ae8",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -159,7 +159,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "e62687ba-7198-41ac-b9a9-fb72970a9c27",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -177,7 +177,16 @@
                     "name": "Sheath/Unsheath",
                     "type": "Button",
                     "id": "e87fc71f-3bea-49de-a538-3f0a67241af3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwapWeapon",
+                    "type": "Button",
+                    "id": "828e7707-5e47-4904-95af-5105a22ff421",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -335,6 +344,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Sheath/Unsheath",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12054351-fd96-4a7b-bbd4-58f1e1aa0637",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwapWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

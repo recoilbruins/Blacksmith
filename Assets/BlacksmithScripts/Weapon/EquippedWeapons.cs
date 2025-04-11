@@ -7,10 +7,14 @@ using UnityEngine.Rendering;
 public class EquippedWeapons : MonoBehaviour
 {
     public Weapon[] currentWeapons;
-    public bool areWeaponsSheathed { get; private set; } = false;
-    public bool isDualWield { get; private set; } = false;
 
-    public bool isTwoHandedWeapon { get; private set; } = false;
+    public enum WeaponType { SINGLEHANDED, DUALWIELD, TWOHANDED, UNARMED }
+    public WeaponType weaponType;
+
+    public enum WeaponStatus { SHEATHED, UNSHEATHED}
+    public WeaponStatus weaponStatus;
+
+    public bool areWeaponsSheathed { get; private set; } = false;
     public AnimatorOverrideController dualWieldingAOC;
 
     public float weaponDamage { get; private set; } = 0;
@@ -44,7 +48,7 @@ public class EquippedWeapons : MonoBehaviour
 
     private bool isTwoHandedWeaponEquipped()
     {
-        if (currentWeapons.Length < 1) { Debug.LogError("currently there is no weapon equipped"); return false; }
+        if (WeaponListEmpty()) { Debug.LogError("currently there is no weapon equipped"); return false; }
         
         if (currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.TWOHANDWEAPON || currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
         {
@@ -56,32 +60,33 @@ public class EquippedWeapons : MonoBehaviour
         }
     }
 
+    public bool WeaponListEmpty()
+    {
+        if(currentWeapons.Length > 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
    
     private void WhatTypeOfWeaponsAreEquipped()
     {
         
         if (IsWieldingTwoWeapons())
         {
-            isDualWield = true;
-        }
-        else
-        {
-            isDualWield = false;
+            weaponType = WeaponType.DUALWIELD;
         }
 
         if (isTwoHandedWeaponEquipped())
         {
-            isTwoHandedWeapon = true;
-        }
-        else
-        {
-            isDualWield = false;
+            weaponType = WeaponType.TWOHANDED;
         }
     }
 
     private void CalculateWeaponDamage()
     {
-        if (isDualWield)
+        if (weaponType == WeaponType.DUALWIELD)
         {
             weaponDamage = (currentWeapons[0].weaponSO.weaponDamage + currentWeapons[1].weaponSO.weaponDamage) / 2;
         }

@@ -190,17 +190,19 @@ namespace BlacksmithCombat
 
             if (isRightHand)
             {
+                EnableWeaponCollider(0);
                 animationManager.PlayAttackAnimations(PRIMARY_ATTACK, rightComboCounter, isRightHand:isRightHand);
                 rightComboCounter = (rightComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
             }
             else
             {
+                EnableWeaponCollider(1);
                 animationManager.PlayAttackAnimations(SECONDARY_ATTACK, leftComboCounter, isRightHand: isRightHand);
                 leftComboCounter = (leftComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
             }
             comboTimer = comboResetTimer;
 
-            Invoke("ResetAttacking", 0.35f);
+            Invoke("ResetAttacking", 0.5f);
         }
 
         private bool BlockingAnimationIsCurrentlyPlaying()
@@ -229,9 +231,25 @@ namespace BlacksmithCombat
             }
         }
 
+        private void EnableWeaponCollider(int weaponIndex)
+        {
+            if(equippedWeapons.WeaponListEmpty())
+            {
+                return;
+            }
+            if (equippedWeapons.currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
+            {
+                equippedWeapons.currentWeapons[0].EnableWeaponColliders(weaponIndex);
+            }
+        }
+
         private void ResetAttacking()
         {
             isAttacking = false;
+            if(!equippedWeapons.WeaponListEmpty() )
+            {
+                equippedWeapons.currentWeapons[0].DisableWeaponColliders();
+            }
         }
 
         private void EndCurrentCombo()

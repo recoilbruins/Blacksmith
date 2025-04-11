@@ -21,19 +21,17 @@ public class Weapon : Item
     void Awake()
     {
         weaponSO.defaultDamage = weaponSO.weaponDamage;
+        DisableWeaponColliders();
     }
 
-    public void EnableWeaponColliders()
+    public void EnableWeaponColliders(int weaponIndex)
     {
-        foreach (Collider collider in weaponColliders)
-        {
-            collider.enabled = true;
-        }
+       weaponColliders[weaponIndex].enabled = true;
     }
 
-    public void StartAttack()
+    public void StartAttack(int weaponIndex)
     {
-        EnableWeaponColliders();
+        EnableWeaponColliders(weaponIndex);
         isAttacking = true;
     }
 

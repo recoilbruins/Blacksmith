@@ -27,6 +27,7 @@ namespace BlackSmithInput
         public bool isEscapePressed;
         public bool isPrimaryButtonPressed;
         public bool isSecondaryButtonPressed;
+        public bool isSwapWeaponPressed;
 
         [HideInInspector] public PlayerControls playerControls { get; private set; }
 
@@ -78,6 +79,8 @@ namespace BlackSmithInput
 
 
                 playerControls.PlayerUI.Escape.performed += playerControls => isEscapePressed = true;
+
+                playerControls.PlayerActions.SwapWeapon.performed += playerControls => isSwapWeaponPressed = true;
             }
         }
 
