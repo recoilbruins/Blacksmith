@@ -36,4 +36,20 @@ public class CharacterModelWeaponController : MonoBehaviour
             }
         }
     }
+    public void DeactivateOffHandWeapon()
+    {
+        foreach (var weapon in offHandWeapons)
+        {
+            if (weapon.activeInHierarchy)
+            {
+                weapon.SetActive(false);
+            }
+        }
+    }
+
+    public void DeactivateBothWeapons()
+    {
+        DeactivateMainHandWeapon();
+        DeactivateOffHandWeapon();
+    }
 }

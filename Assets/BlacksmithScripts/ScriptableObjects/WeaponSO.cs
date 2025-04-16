@@ -29,4 +29,8 @@ public class WeaponSO : ScriptableObject
     public int lightAttackHalfCombo;
     public float weaponDamage;
     [HideInInspector] public float defaultDamage;
+
+    [Space(10)]
+    [Header("Weapon Index For Character Model To Enable")]
+    public int weaponIndex;
 }

@@ -8,9 +8,6 @@ public class Weapon : Item
 
     [SerializeField] private bool isUnarmed = false;
 
-    /*public AttackSO[] lightAttackCombo;
-    public AttackSO[] heavyAttackCombo;*/
-
     [SerializeField] private Collider[] weaponColliders;
 
     [SerializeField] private WeaponCollision[] weaponCollisions;
