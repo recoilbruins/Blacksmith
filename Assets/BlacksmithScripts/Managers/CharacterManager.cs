@@ -22,7 +22,7 @@ namespace BlacksmithCharacter
         public Rigidbody rb;
         public CapsuleCollider capsuleCollider;
 
-        public override int TakeDamage(float damage)
+        public override void TakeDamage(float damage)
         {
             throw new System.NotImplementedException();
         }

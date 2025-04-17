@@ -10,7 +10,7 @@ namespace BlacksmithCombat
     public class PlayerCombat : MonoBehaviour
     {
         [Header("Current Equipped Weapon")]
-        [SerializeField] EquippedWeapons equippedWeapons;
+        [SerializeField] private EquippedWeapons equippedWeapons;
 
         [SerializeField] private HandActionController handActionController;
 
@@ -26,7 +26,6 @@ namespace BlacksmithCombat
 
         [Header("Script References")]
         AnimationManager animationManager;
-        PlayerMovement playerMovement;
 
         [Header("Strings")]
         private static string PRIMARY_ATTACK = "primaryAttack";
@@ -46,7 +45,6 @@ namespace BlacksmithCombat
         private void Awake()
         {
             animationManager = GetComponent<AnimationManager>();
-            playerMovement = GetComponent<PlayerMovement>();
         }
 
         private void Start()
@@ -78,9 +76,6 @@ namespace BlacksmithCombat
         public void PlayerCombatFunctions()
         {
             
-            // return if player is in the air or jumping
-            if (playerMovement.isJumping || !playerMovement.isGrounded /*|| playerMovement.isDodging*/) { return; }
-
             if(InputManager.instance.isPrimaryButtonPressed)
             {
                 Debug.Log("Primary Button Pressed");
@@ -172,19 +167,21 @@ namespace BlacksmithCombat
                 animationManager.animator.SetBool(BLOCKING_ATTACK, false);
             }
         }
-        
+
         private void LightAttack(Weapon weapon, bool isRightHand)
         {
-            if (isRightHand)
+            if (isBlocking || isAttacking)
             {
-                InputManager.instance.isPrimaryButtonPressed = false;
+                if (isRightHand)
+                {
+                    InputManager.instance.isPrimaryButtonPressed = false;
+                }
+                else
+                {
+                    InputManager.instance.isSecondaryButtonPressed = false;
+                }
+                return;
             }
-            else
-            {
-                InputManager.instance.isSecondaryButtonPressed = false;
-            }
-
-            if (isBlocking || isAttacking) return;
 
             isAttacking = true;
 

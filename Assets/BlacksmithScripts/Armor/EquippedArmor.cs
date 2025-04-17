@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class EquippedArmor : MonoBehaviour
 {
-    public float totalPhysicalArmorVal { get; private set; } = 0;
-    public float totalMagicArmorVal { get; private set; } = 0;
-    public float totalStrengthVal { get; private set; } = 0;
-    public float totalDexterityVal { get; private set; } = 0;
-    public float totalEnduranceVal { get; private set; } = 0;
-    public float totalVitalityVal { get; private set; } = 0;
-    public float totalIntelligenceVal { get; private set; } = 0;
-    public float totalLuckVal { get; private set; } = 0;
+    public float totalPhysicalArmor { get; private set; } = 0;
+    public float totalMagicArmor { get; private set; } = 0;
+    public float totalStrength { get; private set; } = 0;
+    public float totalDexterity { get; private set; } = 0;
+    public float totalEndurance { get; private set; } = 0;
+    public float totalVitality { get; private set; } = 0;
+    public float totalIntelligence { get; private set; } = 0;
+    public float totalLuck { get; private set; } = 0;
 
     [Header("Armor")]
     [ReadOnly]
@@ -70,17 +70,17 @@ public class EquippedArmor : MonoBehaviour
 
     private void UpdateArmorValues()
     {
-        totalPhysicalArmorVal = helmet.myArmorSO.physicalArmorVal + bodyArmor.myArmorSO.physicalArmorVal + gauntlets.myArmorSO.physicalArmorVal + belt.myArmorSO.physicalArmorVal + greaves.myArmorSO.physicalArmorVal + boots.myArmorSO.physicalArmorVal;
+        totalPhysicalArmor = helmet.myArmorSO.physicalArmorVal + bodyArmor.myArmorSO.physicalArmorVal + gauntlets.myArmorSO.physicalArmorVal + belt.myArmorSO.physicalArmorVal + greaves.myArmorSO.physicalArmorVal + boots.myArmorSO.physicalArmorVal;
         
-        totalMagicArmorVal = helmet.myArmorSO.magicArmorVal + bodyArmor.myArmorSO.magicArmorVal + gauntlets.myArmorSO.magicArmorVal + belt.myArmorSO.magicArmorVal + greaves.myArmorSO.magicArmorVal + boots.myArmorSO.magicArmorVal;
+        totalMagicArmor = helmet.myArmorSO.magicArmorVal + bodyArmor.myArmorSO.magicArmorVal + gauntlets.myArmorSO.magicArmorVal + belt.myArmorSO.magicArmorVal + greaves.myArmorSO.magicArmorVal + boots.myArmorSO.magicArmorVal;
         
-        totalStrengthVal = helmet.myArmorSO.strength + bodyArmor.myArmorSO.strength + gauntlets.myArmorSO.strength + belt.myArmorSO.strength + greaves.myArmorSO.strength + boots.myArmorSO.strength;
+        totalStrength = helmet.myArmorSO.strength + bodyArmor.myArmorSO.strength + gauntlets.myArmorSO.strength + belt.myArmorSO.strength + greaves.myArmorSO.strength + boots.myArmorSO.strength;
         
-        totalDexterityVal = helmet.myArmorSO.dexterity + bodyArmor.myArmorSO.dexterity + gauntlets.myArmorSO.dexterity + belt.myArmorSO.dexterity + greaves.myArmorSO.dexterity + boots.myArmorSO.dexterity;
+        totalDexterity = helmet.myArmorSO.dexterity + bodyArmor.myArmorSO.dexterity + gauntlets.myArmorSO.dexterity + belt.myArmorSO.dexterity + greaves.myArmorSO.dexterity + boots.myArmorSO.dexterity;
         
-        totalIntelligenceVal = helmet.myArmorSO.intelligence + bodyArmor.myArmorSO.intelligence + gauntlets.myArmorSO.intelligence + belt.myArmorSO.intelligence + greaves.myArmorSO.intelligence + boots.myArmorSO.intelligence;
+        totalIntelligence = helmet.myArmorSO.intelligence + bodyArmor.myArmorSO.intelligence + gauntlets.myArmorSO.intelligence + belt.myArmorSO.intelligence + greaves.myArmorSO.intelligence + boots.myArmorSO.intelligence;
         
-        totalLuckVal = helmet.myArmorSO.luck + bodyArmor.myArmorSO.luck + gauntlets.myArmorSO.luck + belt.myArmorSO.luck + greaves.myArmorSO.luck + boots.myArmorSO.luck;
+        totalLuck = helmet.myArmorSO.luck + bodyArmor.myArmorSO.luck + gauntlets.myArmorSO.luck + belt.myArmorSO.luck + greaves.myArmorSO.luck + boots.myArmorSO.luck;
     }
 
     public float GetJewelryDamageValue()

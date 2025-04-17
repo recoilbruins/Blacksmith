@@ -15,7 +15,6 @@ namespace BlacksmithPlayer
         public static PlayerManager instance;
         private AnimationManager animationManager;
         private PlayerMovement playerMovement;
-        private EquippedWeapons currentEquippedWeapons;
         private PlayerCombat playerCombat;
 
         [Header("Player States")]
@@ -42,26 +41,26 @@ namespace BlacksmithPlayer
             animator = GetComponent<Animator>();
             animationManager = GetComponent<AnimationManager>();
             playerCombat = GetComponent<PlayerCombat>();
-            currentEquippedWeapons = GetComponent<EquippedWeapons>();
+            equippedWeapons = GetComponent<EquippedWeapons>();
             animationManager.animator = animator;
         }
 
         private void Start()
         {
-            if(currentEquippedWeapons != null && currentEquippedWeapons.currentWeapons.Length > 0)
+            if(equippedWeapons != null && equippedWeapons.currentWeapons.Length > 0)
             {
-                if(currentEquippedWeapons.currentWeapons.Length < 2)
+                if(equippedWeapons.currentWeapons.Length < 2)
                 {
-                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[0].weaponSO.animatorOverrideController;
+                    animationManager.currentAOC = equippedWeapons.currentWeapons[0].weaponSO.animatorOverrideController;
                 }
                 else
                 {
-                    animationManager.currentAOC = currentEquippedWeapons.currentWeapons[1].weaponSO.animatorOverrideController;
+                    animationManager.currentAOC = equippedWeapons.currentWeapons[1].weaponSO.animatorOverrideController;
                 }
                 animationManager.animator.runtimeAnimatorController = animationManager.currentAOC;
-                if (currentEquippedWeapons.currentWeapons.Length > 1)
+                if (equippedWeapons.currentWeapons.Length > 1)
                 {
-                    if (currentEquippedWeapons.currentWeapons[1].weaponSO.weaponType == WeaponSO.WeaponType.SHIELD) 
+                    if (equippedWeapons.currentWeapons[1].weaponSO.weaponType == WeaponSO.WeaponType.SHIELD) 
                     {
                         SetupShieldAttackAnimations.myInstance.UpdateShieldAttackAnimationsToMainHandWeaponAttacks();
                     }
@@ -73,8 +72,9 @@ namespace BlacksmithPlayer
 
         private void FixedUpdate()
         {
-            playerCombat.PlayerCombatFunctions();
             playerMovement.UpdateAllMovement(moveSpeedMultiplier);
+            if (playerMovement.isJumping || !playerMovement.isGrounded /*|| playerMovement.isDodging*/) { return; }
+            playerCombat.PlayerCombatFunctions();
         }
 
         private void Update()
@@ -90,7 +90,7 @@ namespace BlacksmithPlayer
             UpdateManagerBools();
         }
 
-        public void UpdateManagerBools()
+        private void UpdateManagerBools()
         {
             isAnimationLocked = animationManager.animator.GetBool("isAnimationLocked");
             isUsingRootMotion = playerMovement.isUsingRootMotion;

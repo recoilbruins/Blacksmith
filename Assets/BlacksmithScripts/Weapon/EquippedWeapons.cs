@@ -20,11 +20,6 @@ public class EquippedWeapons : MonoBehaviour
     public float weaponDamage { get; private set; } = 0;
 
 
-    public void Awake()
-    {
-        
-    }
-
     private void Start()
     {
         WhatTypeOfWeaponsAreEquipped();
@@ -46,7 +41,7 @@ public class EquippedWeapons : MonoBehaviour
         return false;
     }
 
-    private bool isTwoHandedWeaponEquipped()
+    private bool IsTwoHandedWeaponEquipped()
     {
         if (WeaponListEmpty()) { Debug.LogError("currently there is no weapon equipped"); return false; }
         
@@ -78,7 +73,7 @@ public class EquippedWeapons : MonoBehaviour
             weaponType = WeaponType.DUALWIELD;
         }
 
-        if (isTwoHandedWeaponEquipped())
+        if (IsTwoHandedWeaponEquipped())
         {
             weaponType = WeaponType.TWOHANDED;
         }

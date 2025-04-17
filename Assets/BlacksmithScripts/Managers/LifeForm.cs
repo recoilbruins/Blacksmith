@@ -10,7 +10,7 @@ public abstract class LifeForm : MonoBehaviour
     public float currentStamina { get; set; }
     public float currentMana { get; set; }
 
-    public abstract int TakeDamage (float damage);
+    public abstract void TakeDamage (float damage);
 
     public abstract void Die();
 }
