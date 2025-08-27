@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class EquippedArmor : MonoBehaviour
 {
-    public float totalPhysicalArmorVal { get; private set; } = 0;
-    public float totalMagicArmorVal { get; private set; } = 0;
-    public float totalStrengthVal { get; private set; } = 0;
-    public float totalDexterityVal { get; private set; } = 0;
-    public float totalEnduranceVal { get; private set; } = 0;
-    public float totalVitalityVal { get; private set; } = 0;
-    public float totalIntelligenceVal { get; private set; } = 0;
-    public float totalLuckVal { get; private set; } = 0;
+    public float totalPhysicalArmor { get; private set; } = 0;
+    public float totalMagicArmor { get; private set; } = 0;
+    public float totalStrength { get; private set; } = 0;
+    public float totalDexterity { get; private set; } = 0;
+    public float totalEndurance { get; private set; } = 0;
+    public float totalVitality { get; private set; } = 0;
+    public float totalIntelligence { get; private set; } = 0;
+    public float totalLuck { get; private set; } = 0;
 
     [Header("Armor")]
     [ReadOnly]
@@ -32,31 +32,31 @@ public class EquippedArmor : MonoBehaviour
     [ReadOnly]
     public Jewelry rightRing = null;
 
-    public void EquipArmorPiece(ArmorData armorData, Armor armorItem)
+    public void EquipArmorPiece(ArmorSO armorSO, Armor armorItem)
     {
-        switch(armorData.armorType)
+        switch(armorSO.armorType)
         {
-            case ArmorType.Helmet:
+            case ArmorSO.ArmorType.HELMET:
                 UnequipArmorPiece(helmet);
                 helmet = armorItem;
                 break;
-            case ArmorType.Chestplate:
+            case ArmorSO.ArmorType.CHEST:
                 UnequipArmorPiece(bodyArmor);
                 bodyArmor = armorItem;
                 break;
-            case ArmorType.Gauntlets:
+            case ArmorSO.ArmorType.GLOVES:
                 UnequipArmorPiece(gauntlets);
                 gauntlets = armorItem;
                 break;
-            case ArmorType.Belt:
+            case ArmorSO.ArmorType.BELT:
                 UnequipArmorPiece(belt);
                 belt = armorItem;
                 break;
-            case ArmorType.Greaves:
+            case ArmorSO.ArmorType.GREAVES:
                 UnequipArmorPiece(greaves);
                 greaves = armorItem;
                 break;
-            case ArmorType.Boots:
+            case ArmorSO.ArmorType.BOOTS:
                 UnequipArmorPiece(boots);
                 boots = armorItem;
                 break;
@@ -67,39 +67,24 @@ public class EquippedArmor : MonoBehaviour
     {
         armorPiece = null;
     }
-    private Armor[] GetEquippedArmor()
-    {
-        return new Armor[] { helmet, bodyArmor, gauntlets, belt, greaves, boots };
-    }
 
     private void UpdateArmorValues()
     {
-        totalPhysicalArmorVal = 0;
-        totalMagicArmorVal = 0;
-        totalStrengthVal = 0;
-        totalDexterityVal = 0;
-        totalEnduranceVal = 0;
-        totalVitalityVal = 0;
-        totalIntelligenceVal = 0;
-        totalLuckVal = 0;
-
-        foreach (var armor in GetEquippedArmor())
-        {
-            if (armor == null || armor.myArmorData == null) continue;
-
-            totalPhysicalArmorVal += armor.myArmorData.physicalDefense;
-            totalMagicArmorVal += armor.myArmorData.magicDefense;
-            totalStrengthVal += armor.myArmorData.strength;
-            totalDexterityVal += armor.myArmorData.dexterity;
-            totalEnduranceVal += armor.myArmorData.endurance;
-            totalVitalityVal += armor.myArmorData.vitality;
-            totalIntelligenceVal += armor.myArmorData.intelligence;
-            totalLuckVal += armor.myArmorData.luck;
-        }
+        totalPhysicalArmor = helmet.myArmorSO.physicalArmorVal + bodyArmor.myArmorSO.physicalArmorVal + gauntlets.myArmorSO.physicalArmorVal + belt.myArmorSO.physicalArmorVal + greaves.myArmorSO.physicalArmorVal + boots.myArmorSO.physicalArmorVal;
+        
+        totalMagicArmor = helmet.myArmorSO.magicArmorVal + bodyArmor.myArmorSO.magicArmorVal + gauntlets.myArmorSO.magicArmorVal + belt.myArmorSO.magicArmorVal + greaves.myArmorSO.magicArmorVal + boots.myArmorSO.magicArmorVal;
+        
+        totalStrength = helmet.myArmorSO.strength + bodyArmor.myArmorSO.strength + gauntlets.myArmorSO.strength + belt.myArmorSO.strength + greaves.myArmorSO.strength + boots.myArmorSO.strength;
+        
+        totalDexterity = helmet.myArmorSO.dexterity + bodyArmor.myArmorSO.dexterity + gauntlets.myArmorSO.dexterity + belt.myArmorSO.dexterity + greaves.myArmorSO.dexterity + boots.myArmorSO.dexterity;
+        
+        totalIntelligence = helmet.myArmorSO.intelligence + bodyArmor.myArmorSO.intelligence + gauntlets.myArmorSO.intelligence + belt.myArmorSO.intelligence + greaves.myArmorSO.intelligence + boots.myArmorSO.intelligence;
+        
+        totalLuck = helmet.myArmorSO.luck + bodyArmor.myArmorSO.luck + gauntlets.myArmorSO.luck + belt.myArmorSO.luck + greaves.myArmorSO.luck + boots.myArmorSO.luck;
     }
 
     public float GetJewelryDamageValue()
     {
-        return amulet.myJewelryData.bonusHealth + leftRing.myJewelryData.bonusHealth + rightRing.myJewelryData.bonusHealth;
+        return amulet.myJewelrySO.health + leftRing.myJewelrySO.health + rightRing.myJewelrySO.health;
     }
 }

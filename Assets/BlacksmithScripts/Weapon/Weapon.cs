@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class Weapon : Item
 {
-    public WeaponData weaponData;
+    public WeaponSO weaponSO;
 
     [SerializeField] private bool isUnarmed = false;
 
-    [SerializeField] private Collider hitCollider;
+    [SerializeField] private Collider[] weaponColliders;
 
     [SerializeField] private WeaponCollision[] weaponCollisions;
-
-   
 
     private bool isAttacking = false;
 
     // Start is called before the first frame update
     void Awake()
     {
-        //weaponSO.defaultDamage = weaponSO.weaponDamage;
-        DisableWeaponCollider();
+        weaponSO.defaultDamage = weaponSO.weaponDamage;
+        DisableWeaponColliders();
     }
 
-    
+    public void EnableWeaponColliders(int weaponIndex)
+    {
+       weaponColliders[weaponIndex].enabled = true;
+    }
 
-/*    public void StartAttack(int weaponIndex)
+    public void StartAttack(int weaponIndex)
     {
         EnableWeaponColliders(weaponIndex);
         isAttacking = true;
@@ -35,7 +36,7 @@ public class Weapon : Item
     {
         DisableWeaponColliders();
         isAttacking = false;
-    }*/
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -44,20 +45,17 @@ public class Weapon : Item
 
         
     }
-    public void EnableWeaponCollider()
+
+    public void DisableWeaponColliders()
     {
-        hitCollider.enabled = true;
-    }
-    public void DisableWeaponCollider()
-    {
-        hitCollider.enabled = false;
+        foreach (Collider collider in weaponColliders)
+        {
+            collider.enabled = false;
+        }
     }
 
-    public AttackData GetLightAttack(bool isRightHand, int comboIndex)
+    public void ResetDamage()
     {
-        var attackData = isRightHand ? weaponData.rightHandLightAttackCombo[comboIndex % weaponData.rightHandLightAttackCombo.Count] :
-                         weaponData.leftHandLightAttackCombo[comboIndex % weaponData.leftHandLightAttackCombo.Count];
-        return attackData;
+        weaponSO.weaponDamage = weaponSO.defaultDamage;
     }
-
 }

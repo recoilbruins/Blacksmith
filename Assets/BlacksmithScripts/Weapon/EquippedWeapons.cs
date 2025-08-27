@@ -1,24 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Collections;
 using UnityEngine;
- public enum WeaponStatus { Sheathed, Unsheathed}
+using UnityEngine.Rendering;
 
 public class EquippedWeapons : MonoBehaviour
 {
     public Weapon[] currentWeapons;
 
+    public enum WeaponType { SINGLEHANDED, DUALWIELD, TWOHANDED, UNARMED }
     public WeaponType weaponType;
 
+    public enum WeaponStatus { SHEATHED, UNSHEATHED}
     public WeaponStatus weaponStatus;
 
+    public bool areWeaponsSheathed { get; private set; } = false;
     public AnimatorOverrideController dualWieldingAOC;
 
     public float weaponDamage { get; private set; } = 0;
-
-    public Weapon MainHandWeapon => currentWeapons.Length > 0 ? currentWeapons[0] : null;
-    public Weapon OffHandWeapon => currentWeapons.Length > 1 ? currentWeapons[1] : null;
 
 
     private void Start()
@@ -30,21 +29,23 @@ public class EquippedWeapons : MonoBehaviour
 
     private bool IsWieldingTwoWeapons()
     {
-        if (currentWeapons.Length < 1 || MainHandWeapon == null || OffHandWeapon == null) { Debug.Log("currently there is not more than 1 weapon equipped"); return false; }
-         
-        if (MainHandWeapon.weaponData.weaponType == WeaponType.OneHanded && OffHandWeapon.weaponData.weaponType == WeaponType.OneHanded)
+        if(currentWeapons.Length > 1)
         {
-            return true;
+            if (currentWeapons[0] == null || currentWeapons[1] == null) { Debug.LogError("currently one of the two weapons equipped are null"); return false; }
+            
+            if (currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.ONEHANDWEAPON && currentWeapons[1].weaponSO.weaponType == WeaponSO.WeaponType.ONEHANDWEAPON)
+            {
+                return true;
+            }
         }
-        
         return false;
     }
 
-    private bool isTwoHandedWeaponEquipped()
+    private bool IsTwoHandedWeaponEquipped()
     {
         if (WeaponListEmpty()) { Debug.LogError("currently there is no weapon equipped"); return false; }
-
-        if (MainHandWeapon.weaponData.weaponType == WeaponType.TwoHanded)
+        
+        if (currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.TWOHANDWEAPON || currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
         {
             return true;
         }
@@ -54,20 +55,13 @@ public class EquippedWeapons : MonoBehaviour
         }
     }
 
-    private bool isUnarmed()
-    {
-        if (WeaponListEmpty()) { Debug.LogError("currently there is no weapon equipped"); return false; }
-
-        if (MainHandWeapon.weaponData.weaponType == WeaponType.Unarmed)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public bool WeaponListEmpty()
     {
-        return currentWeapons == null || currentWeapons.Length == 0 || currentWeapons.All(w => w == null);
+        if(currentWeapons.Length > 0)
+        {
+            return false;
+        }
+        return true;
     }
 
    
@@ -76,16 +70,24 @@ public class EquippedWeapons : MonoBehaviour
         
         if (IsWieldingTwoWeapons())
         {
-            weaponType = WeaponType.DualWield;
+            weaponType = WeaponType.DUALWIELD;
         }
 
-        else if (isTwoHandedWeaponEquipped())
+        if (IsTwoHandedWeaponEquipped())
         {
-            weaponType = WeaponType.TwoHanded;
+            weaponType = WeaponType.TWOHANDED;
         }
-        else if (isUnarmed())
+    }
+
+    private void CalculateWeaponDamage()
+    {
+        if (weaponType == WeaponType.DUALWIELD)
         {
-            weaponType = WeaponType.Unarmed;
+            weaponDamage = (currentWeapons[0].weaponSO.weaponDamage + currentWeapons[1].weaponSO.weaponDamage) / 2;
+        }
+        else
+        {
+            weaponDamage = currentWeapons[0].weaponSO.weaponDamage;
         }
     }
 
