@@ -37,18 +37,18 @@ public class HandActionController : MonoBehaviour
             Weapon weapon = equippedWeapons.currentWeapons[0];
             if (weapon == null) { Debug.LogError("No Weapon Equipped in main hand"); return; }
 
-            switch (weapon.weaponSO.weaponType)
+            switch (weapon.weaponData.weaponType)
             {
-                case WeaponSO.WeaponType.ONEHANDWEAPON:
+                case WeaponType.OneHanded:
                     rightHandAttack = true;
                     break;
-                case WeaponSO.WeaponType.TWOHANDWEAPON:
+                case WeaponType.TwoHanded:
                     twoHandedAttack = true;
                     break;
-                case WeaponSO.WeaponType.UNARMED:
+                case WeaponType.Unarmed:
                     rightHandAttack = true;
                     break;
-                case WeaponSO.WeaponType.SPELL:
+                case WeaponType.Spell:
                     castRightHand = true;
                     break;
             }
@@ -57,7 +57,7 @@ public class HandActionController : MonoBehaviour
         {
             if(equippedWeapons.currentWeapons.Length < 2)
             {
-                if(equippedWeapons.currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
+                if(equippedWeapons.currentWeapons[0].weaponData.weaponType == WeaponType.Unarmed)
                 {
                     leftHandAttack = true;
                 }
@@ -69,22 +69,22 @@ public class HandActionController : MonoBehaviour
                 return;
             }
             Weapon weapon = equippedWeapons.currentWeapons[1];
-            switch (weapon.weaponSO.weaponType)
+            switch (weapon.weaponData.weaponType)
             {
-                case WeaponSO.WeaponType.ONEHANDWEAPON:
+                case WeaponType.OneHanded:
                     leftHandAttack = true;
                     break;
-                case WeaponSO.WeaponType.TWOHANDWEAPON:
+                case WeaponType.TwoHanded:
                     isBlocking = true;
                     break;
-                case WeaponSO.WeaponType.UNARMED:
+                case WeaponType.Unarmed:
                     Debug.Log("light Attack");
                     leftHandAttack = true;
                     break;
-                case WeaponSO.WeaponType.SPELL:
+                case WeaponType.Spell:
                     castLeftHand = true;
                     break;
-                case WeaponSO.WeaponType.SHIELD:
+                case WeaponType.Shield:
                     isBlocking = true;
                     break;
 

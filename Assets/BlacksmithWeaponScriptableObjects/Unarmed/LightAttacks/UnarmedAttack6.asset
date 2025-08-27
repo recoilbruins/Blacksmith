@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa10d34cece03c74e8634ad4c6d9f768, type: 3}
   m_Name: UnarmedAttack6
   m_EditorClassIdentifier: 
-  damageMultiplier: 1
-  animation: {fileID: 7400000, guid: 1315bcd7509173f44bc6655b2673dd4d, type: 3}
+  animationTriggerName: LeftAttack3
+  damageMultiplier: 1.25
+  staminaCost: 0
+  attackDuration: 0.6
+  comboWindow: 1
+  sfx: {fileID: 0}

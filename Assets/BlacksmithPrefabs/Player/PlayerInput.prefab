@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &35248508196318048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1344964820641235348}
+  - component: {fileID: 608522977007316585}
+  - component: {fileID: 3059910120844702641}
+  - component: {fileID: 8261739063617827772}
+  m_Layer: 0
+  m_Name: PlayerInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1344964820641235348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35248508196318048}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &608522977007316585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35248508196318048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e232ca398bad56b41b0a9e695506f06d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handInputActions: {fileID: 0}
+  movementInput: {x: 0, y: 0}
+  horizontal: 0
+  vertical: 0
+  moveAmount: 0
+  isSprintPressed: 0
+  isJumpPressed: 0
+  isDodgePressed: 0
+  isInteractPressed: 0
+  isEscapePressed: 0
+  isPrimaryButtonPressed: 0
+  isSecondaryButtonPressed: 0
+  isSwapWeaponPressed: 0
+  isLockOnPressed: 0
+--- !u!114 &3059910120844702641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35248508196318048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a0451a88f207a4b9dc2955f9e3e30c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8261739063617827772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35248508196318048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e77abf7181fea4ba3ccb5bd8a41583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentEquippedWeapons: {fileID: 0}
+  animationManager: {fileID: 0}
+  animationNames:
+  - Unarmed-Attack-L1
+  - Unarmed-Attack-L2
+  - Unarmed-Attack-L3
+  - Unarmed-Attack-R1
+  - Unarmed-Attack-R2
+  - Unarmed-Attack-R3

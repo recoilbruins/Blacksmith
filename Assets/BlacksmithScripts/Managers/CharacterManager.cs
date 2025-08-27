@@ -1,16 +1,21 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlacksmithCharacter
 {
-    public class CharacterManager : LifeForm
+    public class CharacterManager : LifeForm, IDamageable
     {
-        public float characterLevel { get; set; } = 1;
-        public float strength { get; set; } = 1;
-        public float dexterity { get; set; } = 1;
-        public float endurance { get; set; } = 1;
-        public float vitality { get; set; } = 1;
-        public float intelligence { get; set; } = 1;
-        public float luck { get; set; } = 1;
+        public float strength;
+        public float dexterity;
+        public float intelligence;
+        public float endurance;
+        public float vitality;
+        public float luck;
+        public float characterLevel;
+        public float physicalDefense;
+        public float magicDefense;
+        public float fireResistance;
 
         public float moveSpeedMultiplier { get; set; } = 1;
         public float attackSpeedMultiplier { get; set; } = 1;
@@ -22,14 +27,54 @@ namespace BlacksmithCharacter
         public Rigidbody rb;
         public CapsuleCollider capsuleCollider;
 
-        public override int TakeDamage(float damage)
+        private void Start()
         {
-            throw new System.NotImplementedException();
+            IgnoreMyColliders();
+        }
+
+        public CharacterManager GetCharacterStats()
+        {
+            return this;
         }
 
         public override void Die()
         {
-            throw new System.NotImplementedException();
+            Debug.Log($"{gameObject.name} died.");
+
+            // Handle death logic here, such as playing an animation, disabling controls, etc.
+        }
+
+        public void TakeDamage(float amount, DamageType type, GameObject source)
+        {
+            currentHealth -= amount;
+            Debug.Log($"{gameObject.name} took {amount} {type} damage!");
+
+            if (currentHealth <= 0)
+                Die();
+        }
+        protected virtual void IgnoreMyColliders()
+        {
+
+            Collider[] colliders = GetComponentsInChildren<Collider>();
+            List<Collider> colliderList = new List<Collider>();
+
+            foreach (Collider collider in colliders)
+            {
+                colliderList.Add(collider);
+            }
+
+            colliderList.Add(capsuleCollider);
+
+            foreach(Collider collider in colliderList)
+            {
+                foreach (Collider otherCollider in colliderList)
+                {
+                    if (collider != otherCollider)
+                    {
+                        Physics.IgnoreCollision(collider, otherCollider);
+                    }
+                }
+            }
         }
     }
 }

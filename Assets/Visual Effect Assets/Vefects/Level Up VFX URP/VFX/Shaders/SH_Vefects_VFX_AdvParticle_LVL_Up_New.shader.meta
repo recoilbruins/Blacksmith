@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ba9f5a067f016d0489db60d994e4ea8e
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 241407
+  packageName: Level Up VFX - URP
+  packageVersion: 1.0.41
+  assetPath: Assets/Vefects/Level Up VFX URP/VFX/Shaders/SH_Vefects_VFX_AdvParticle_LVL_Up_New.shader
+  uploadId: 756742

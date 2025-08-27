@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +20,18 @@ namespace BlackSmithInput
         public float vertical;
         public float moveAmount;
 
+        [Header("Camera Rotation")]
+        public Vector2 cameraInput;
+        public float cameraHorizontal;
+        public float cameraVertical;
+        public float cameraMoveAmount;
+
+        [Header("Camera Switching Targets")]
+        public Vector2 cameraTargetInput;
+        public float cameraTargetHorizontal;
+        public float cameraTargetVertical;
+        public float cameraTargetMoveAmount;
+
         [Header("Button Presses")]
         public bool isSprintPressed;
         public bool isJumpPressed;
@@ -28,6 +41,7 @@ namespace BlackSmithInput
         public bool isPrimaryButtonPressed;
         public bool isSecondaryButtonPressed;
         public bool isSwapWeaponPressed;
+        public bool isLockOnPressed;
 
         [HideInInspector] public PlayerControls playerControls { get; private set; }
 
@@ -49,6 +63,11 @@ namespace BlackSmithInput
 
                 //Movement
                 playerControls.PlayerMovement.Movement.performed += playerControls => movementInput = playerControls.ReadValue<Vector2>();
+
+                //Camera
+                playerControls.PlayerMovement.CameraRotation.performed += playerControls => cameraInput = playerControls.ReadValue<Vector2>();
+
+                playerControls.PlayerActions.SwitchCameraTarget.performed += playerControls => cameraTargetInput = playerControls.ReadValue<Vector2>();
 
                 //Sprint
                 playerControls.PlayerActions.Sprint.performed += playerControls => isSprintPressed = true;
@@ -81,6 +100,8 @@ namespace BlackSmithInput
                 playerControls.PlayerUI.Escape.performed += playerControls => isEscapePressed = true;
 
                 playerControls.PlayerActions.SwapWeapon.performed += playerControls => isSwapWeaponPressed = true;
+
+                playerControls.PlayerActions.LockOn.performed += playerControls => isLockOnPressed = true;
             }
         }
 
@@ -104,6 +125,20 @@ namespace BlackSmithInput
             vertical = movementInput.y;
             horizontal = movementInput.x;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
+        }
+
+        public void CameraInput()
+        {
+            cameraVertical = cameraInput.y;
+            cameraHorizontal = cameraInput.x;
+            cameraMoveAmount = Mathf.Clamp01(Mathf.Abs(cameraHorizontal) + Mathf.Abs(cameraVertical));
+        }
+
+        public void CameraTargetInput()
+        {
+            cameraTargetVertical = cameraTargetInput.y;
+            cameraTargetHorizontal = cameraTargetInput.x;
+            cameraTargetMoveAmount = Mathf.Clamp01(Mathf.Abs(cameraTargetHorizontal) + Mathf.Abs(cameraTargetVertical));
         }
 
         private void LockCursor()

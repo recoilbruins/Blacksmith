@@ -46,8 +46,8 @@ TagManager:
   - Ground
   - Lifeform
   - Ability
-  - Character
-  - 
+  - Enemy
+  - CharacterHurtBoxes
   - 
   - 
   - 

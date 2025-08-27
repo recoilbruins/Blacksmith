@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc09f4f5da568e1488277a7684b792d1, type: 3}
+  m_Name: UnarmedWeapon
+  m_EditorClassIdentifier: 
+  weaponName: Unarmed
+  weaponType: 3
+  damageType: 0
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
+  attackAnimations: []
+  rightHandLightAttackCombo:
+  - {fileID: 11400000, guid: a170f7eb8a7ac514d9a526e7c0a27831, type: 2}
+  - {fileID: 11400000, guid: 0e3d395dc5ae619498fc21ad050ff37b, type: 2}
+  - {fileID: 11400000, guid: e0cb4915b3b57e34c860635af5c69af1, type: 2}
+  leftHandLightAttackCombo:
+  - {fileID: 11400000, guid: e1e28e1e93d0bac488a8539a63957b34, type: 2}
+  - {fileID: 11400000, guid: 46be6e6c09b7b7549acf3208cc2cbda0, type: 2}
+  - {fileID: 11400000, guid: 7357c68e5e889854086d22ecb322c10f, type: 2}
+  heavyAttackCombo: []
+  maxLightComboCount: 6
+  animatorOverrideController: {fileID: 22100000, guid: 171279d56abbfee448b9ec17ec2f3679, type: 2}
+  baseDamage: 10
+  staminaCost: 0
+  attackSpeed: 1
+  poiseDamage: 0

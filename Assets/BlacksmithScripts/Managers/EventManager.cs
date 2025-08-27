@@ -1,34 +1,36 @@
 using UnityEngine;
+using System;
 
+[DefaultExecutionOrder(-10)]
 public class EventManager : MonoBehaviour
 {
-    public static EventManager instance;
+    public static EventManager Instance { get; private set; }
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance != null && Instance != this)
         {
-            instance = this;
+            Destroy(gameObject);
+            return;
         }
-        DontDestroyOnLoad(instance);
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    public delegate void Weapon_Equip_Delegate();
-    public Weapon_Equip_Delegate Weapon_Equip;
-        
-    public delegate void Weapon_Unequip_Delegate();
-    public Weapon_Unequip_Delegate Weapon_Unequip;
+    public event Action OnWeaponEquip;
+    public event Action OnWeaponUnequip;
+    public event Action OnLeftHandAttack;
+    public event Action OnRightHandAttack;
+    public event Action OnSheathWeapon;
+    public event Action OnUnsheathWeapon;
 
-    public delegate void Left_Hand_Attack_Delegate();
-    public Left_Hand_Attack_Delegate Left_Hand_Attack;
-
-    public delegate void Right_Hand_Attack_Delegate();
-    public Right_Hand_Attack_Delegate Right_Hand_Attack;
-
-    public delegate void Sheath_Weapon_Delegate();
-    public Sheath_Weapon_Delegate sheath_Weapon;
-
-    public delegate void Unsheath_Weapon_Delegate();
-    public Weapon_Equip_Delegate unsheath_weapon;
-
+    // These can be triggered safely within this class
+    public void TriggerWeaponEquip() => OnWeaponEquip?.Invoke();
+    public void TriggerWeaponUnequip() => OnWeaponUnequip?.Invoke();
+    public void TriggerLeftHandAttack() => OnLeftHandAttack?.Invoke();
+    public void TriggerRightHandAttack() => OnRightHandAttack?.Invoke();
+    public void TriggerSheathWeapon() => OnSheathWeapon?.Invoke();
+    public void TriggerUnsheathWeapon() => OnUnsheathWeapon?.Invoke();
 }
+

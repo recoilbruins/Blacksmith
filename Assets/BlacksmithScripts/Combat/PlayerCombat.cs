@@ -21,16 +21,28 @@ namespace BlacksmithCombat
         [Header("Weapon Combo")]
         [SerializeField] private int leftComboCounter = 0;
         [SerializeField] private int rightComboCounter = 0;
-        [SerializeField] private float comboResetTimer;
+        [SerializeField] private float comboResetTime = 1.25f;
         [SerializeField] private float comboTimer = 0f;
+/*        [SerializeField] private float rightComboTimer = 0f;*/
+
+        [Header("Input Buffering")]
+        private bool bufferedPrimaryAttack = false;
+        private bool bufferedSecondaryAttack = false;
+        private float bufferWindow = 0.5f; // Time in seconds to buffer the input
+        private float rightBufferTimer = 0f;
+        private float leftBufferTimer = 0f;
+
+        [Header("Attack Failure")]
+        private float attackTimeout = 1.0f; // Time in seconds to wait before allowing another attack
+        private float attackTimer = 0f;
 
         [Header("Script References")]
         AnimationManager animationManager;
         PlayerMovement playerMovement;
 
         [Header("Strings")]
-        private static string PRIMARY_ATTACK = "primaryAttack";
-        private static string SECONDARY_ATTACK = "secondaryAttack";
+        //private static string PRIMARY_ATTACK = "primaryAttack";
+        //private static string SECONDARY_ATTACK = "secondaryAttack";
         private static string BLOCKING_ATTACK = "isBlocking";
 
         private static string BLOCKING_ANIMATION_NAME = "Blocking";
@@ -39,8 +51,8 @@ namespace BlacksmithCombat
         private static int ATTACKANIMATIONLAYER = 2;
         private static int BLOCKANIMATIONLAYER = 1;
 
-        private Weapon mainHandWeapon;
-        private Weapon offHandWeapon;
+        private Weapon rightHandWeapon;
+        private Weapon leftHandWeapon;
 
         //AnimationClipOverrides clipOverrides;
         private void Awake()
@@ -53,29 +65,49 @@ namespace BlacksmithCombat
         {
             if (equippedWeapons.currentWeapons.Length > 0)
             {
-                mainHandWeapon = equippedWeapons.currentWeapons[0];
+                rightHandWeapon = equippedWeapons.currentWeapons[0];
             }
             if (equippedWeapons.currentWeapons.Length > 1)
             {
-                offHandWeapon = equippedWeapons.currentWeapons[1];
+                leftHandWeapon = equippedWeapons.currentWeapons[1];
             }
+            
+        }
+
+        private void OnEnable()
+        {
             EventSubscriptions();
+        }
+        private void OnDisable()
+        {
+            EventUnsubscription();
         }
 
         private void Update()
         {
-            ResetComboTimer();
+            UpdateComboTimers();
+            HandleInputBuffer();
+            AttackFailureTimer();
         }
 
         private void EventSubscriptions()
         {
-            EventManager.instance.Right_Hand_Attack += handActionController.PrimaryHandPress;
-            EventManager.instance.Right_Hand_Attack += PrimaryActionInput;
-            EventManager.instance.Left_Hand_Attack += handActionController.SecondaryHandPress;
-            EventManager.instance.Left_Hand_Attack += SecondaryActionInput;
+            EventManager.Instance.OnRightHandAttack += handActionController.PrimaryHandPress;
+            EventManager.Instance.OnRightHandAttack += PrimaryActionInput;
+            EventManager.Instance.OnLeftHandAttack += handActionController.SecondaryHandPress;
+            EventManager.Instance.OnLeftHandAttack += SecondaryActionInput;
         }
 
-        public void PlayerCombatFunctions()
+        private void EventUnsubscription()
+        {
+            EventManager.Instance.OnRightHandAttack -= handActionController.PrimaryHandPress;
+            EventManager.Instance.OnRightHandAttack -= PrimaryActionInput;
+            EventManager.Instance.OnLeftHandAttack -= handActionController.SecondaryHandPress;
+            EventManager.Instance.OnLeftHandAttack -= SecondaryActionInput;
+        }
+
+
+        public void CombatInputController()
         {
             
             // return if player is in the air or jumping
@@ -83,17 +115,17 @@ namespace BlacksmithCombat
 
             if(InputManager.instance.isPrimaryButtonPressed)
             {
-                Debug.Log("Primary Button Pressed");
-                EventManager.instance.Right_Hand_Attack.Invoke();
+                EventManager.Instance.TriggerRightHandAttack();
             }
             else
             {
                 handActionController.PrimaryHandRelease();
             }
+
+
             if (InputManager.instance.isSecondaryButtonPressed)
             {
-                Debug.Log("Secondary Button Pressed");
-                EventManager.instance.Left_Hand_Attack.Invoke();
+                EventManager.Instance.TriggerLeftHandAttack();
             }
             else
             {
@@ -109,10 +141,11 @@ namespace BlacksmithCombat
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
+
+
             if(handActionController.rightHandAttack)
             {
-                Debug.Log("Time to Attack");
-                LightAttack(mainHandWeapon, isRightHand: true);
+                LightAttack(rightHandWeapon, isRightHand: true);
                 // light Attack right hand
             }
             else if (handActionController.castRightHand)
@@ -132,13 +165,9 @@ namespace BlacksmithCombat
             
             if(handActionController.leftHandAttack)
             {
-                if(offHandWeapon != null)
+                if(leftHandWeapon != null)
                 {
-                    LightAttack(offHandWeapon, isRightHand: false);
-                }
-                else
-                {
-                    LightAttack(mainHandWeapon, isRightHand: false);
+                    LightAttack(leftHandWeapon, isRightHand: false);
                 }
             }
             else if(handActionController.castLeftHand)
@@ -172,38 +201,42 @@ namespace BlacksmithCombat
                 animationManager.animator.SetBool(BLOCKING_ATTACK, false);
             }
         }
-        
-        private void LightAttack(Weapon weapon, bool isRightHand)
+
+        public void LightAttack(Weapon weapon, bool isRightHand)
         {
-            if (isRightHand)
+            if (isRightHand) InputManager.instance.isPrimaryButtonPressed = false;
+            else InputManager.instance.isSecondaryButtonPressed = false;
+
+
+            if (isAttacking)
             {
-                InputManager.instance.isPrimaryButtonPressed = false;
-            }
-            else
-            {
-                InputManager.instance.isSecondaryButtonPressed = false;
+                BufferAttack(isRightHand);
+                return;
             }
 
-            if (isBlocking || isAttacking) return;
+            if (weapon == null || weapon.weaponData == null) return;
+
+            int comboIndex = isRightHand ? rightComboCounter : leftComboCounter;
+            AttackData attackData = weapon.GetLightAttack(isRightHand, comboIndex);
+            if (attackData == null || string.IsNullOrEmpty(attackData.animationTriggerName)) return;
+
+            animationManager.PlayAttackAnimations(attackData.animationTriggerName, comboIndex, isRightHand);
 
             isAttacking = true;
+            attackTimer = attackTimeout;
 
             if (isRightHand)
             {
-                EnableWeaponCollider(0);
-                animationManager.PlayAttackAnimations(PRIMARY_ATTACK, rightComboCounter, isRightHand:isRightHand);
-                rightComboCounter = (rightComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
+                rightComboCounter = (rightComboCounter + 1) % weapon.weaponData.rightHandLightAttackCombo.Count;
+                comboTimer = comboResetTime;
             }
             else
             {
-                EnableWeaponCollider(1);
-                animationManager.PlayAttackAnimations(SECONDARY_ATTACK, leftComboCounter, isRightHand: isRightHand);
-                leftComboCounter = (leftComboCounter + 1) % weapon.weaponSO.lightAttackHalfCombo;
+                leftComboCounter = (leftComboCounter + 1) % weapon.weaponData.leftHandLightAttackCombo.Count;
+                comboTimer = comboResetTime;
             }
-            comboTimer = comboResetTimer;
-
-            Invoke("ResetAttacking", 0.5f);
         }
+
 
         private bool BlockingAnimationIsCurrentlyPlaying()
         {
@@ -218,38 +251,68 @@ namespace BlacksmithCombat
             }
         }
 
-        private void ResetComboTimer()
+        private void UpdateComboTimers()
         {
-            if(comboTimer > 0)
+            if(comboTimer > 0f)
             {
                 comboTimer -= Time.deltaTime;
+                if (comboTimer <= 0f) EndCurrentCombo();
+            }
+        }
 
-                if(comboTimer < 0)
+        private void BufferAttack(bool isRightHand)
+        {
+            if (isRightHand)
+            {
+                bufferedPrimaryAttack = true;
+                rightBufferTimer = bufferWindow;
+            }
+            else
+            {
+                bufferedSecondaryAttack = true;
+                leftBufferTimer = bufferWindow;
+            }
+        }
+
+        private void HandleInputBuffer()
+        {
+            if (bufferedPrimaryAttack)
+            {
+                rightBufferTimer -= Time.deltaTime;
+                if (rightBufferTimer <= 0f)
                 {
-                    EndCurrentCombo();
+                    bufferedPrimaryAttack = false;
+                    LightAttack(rightHandWeapon, isRightHand: true);
+                }
+            }
+            if (bufferedSecondaryAttack)
+            {
+                leftBufferTimer -= Time.deltaTime;
+                if (leftBufferTimer <= 0f)
+                {
+                    bufferedSecondaryAttack = false;
+                    LightAttack(leftHandWeapon, isRightHand: false);
                 }
             }
         }
 
-        private void EnableWeaponCollider(int weaponIndex)
+        private void AttackFailureTimer()
         {
-            if(equippedWeapons.WeaponListEmpty())
+            if (isAttacking)
             {
-                return;
-            }
-            if (equippedWeapons.currentWeapons[0].weaponSO.weaponType == WeaponSO.WeaponType.UNARMED)
-            {
-                equippedWeapons.currentWeapons[0].EnableWeaponColliders(weaponIndex);
+                attackTimer -= Time.deltaTime;
+                if (attackTimer <= 0f)
+                {
+                    Debug.LogWarning("Attack timeout hit, resetting state.");
+                    ResetAttacking();
+                }
             }
         }
 
-        private void ResetAttacking()
+
+        public void ResetAttacking()
         {
             isAttacking = false;
-            if(!equippedWeapons.WeaponListEmpty() )
-            {
-                equippedWeapons.currentWeapons[0].DisableWeaponColliders();
-            }
         }
 
         private void EndCurrentCombo()
@@ -260,9 +323,29 @@ namespace BlacksmithCombat
             animationManager.animator.SetInteger("leftComboCounter", leftComboCounter);
         }
 
+        public void AttackStart(int handVal)
+        {
+            if(handVal == 0 && rightHandWeapon != null)
+            {
+                rightHandWeapon.EnableWeaponCollider();
+            }
+            else if(handVal == 1 && leftHandWeapon != null)
+            {
+                leftHandWeapon.EnableWeaponCollider();
+            }
+        }
+
+        public void AttackEnd(int handVal)
+        {
+            if (handVal == 0 && rightHandWeapon != null)
+            {
+                rightHandWeapon.DisableWeaponCollider();
+            }
+            else if (handVal == 1 && leftHandWeapon != null)
+            {
+                leftHandWeapon.DisableWeaponCollider();
+            }
+        }
     }
-
-    
-
 }
 

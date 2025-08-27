@@ -32,31 +32,31 @@ public class EquippedArmor : MonoBehaviour
     [ReadOnly]
     public Jewelry rightRing = null;
 
-    public void EquipArmorPiece(ArmorSO armorSO, Armor armorItem)
+    public void EquipArmorPiece(ArmorData armorData, Armor armorItem)
     {
-        switch(armorSO.armorType)
+        switch(armorData.armorType)
         {
-            case ArmorSO.ArmorType.HELMET:
+            case ArmorType.Helmet:
                 UnequipArmorPiece(helmet);
                 helmet = armorItem;
                 break;
-            case ArmorSO.ArmorType.CHEST:
+            case ArmorType.Chestplate:
                 UnequipArmorPiece(bodyArmor);
                 bodyArmor = armorItem;
                 break;
-            case ArmorSO.ArmorType.GLOVES:
+            case ArmorType.Gauntlets:
                 UnequipArmorPiece(gauntlets);
                 gauntlets = armorItem;
                 break;
-            case ArmorSO.ArmorType.BELT:
+            case ArmorType.Belt:
                 UnequipArmorPiece(belt);
                 belt = armorItem;
                 break;
-            case ArmorSO.ArmorType.GREAVES:
+            case ArmorType.Greaves:
                 UnequipArmorPiece(greaves);
                 greaves = armorItem;
                 break;
-            case ArmorSO.ArmorType.BOOTS:
+            case ArmorType.Boots:
                 UnequipArmorPiece(boots);
                 boots = armorItem;
                 break;
@@ -67,24 +67,39 @@ public class EquippedArmor : MonoBehaviour
     {
         armorPiece = null;
     }
+    private Armor[] GetEquippedArmor()
+    {
+        return new Armor[] { helmet, bodyArmor, gauntlets, belt, greaves, boots };
+    }
 
     private void UpdateArmorValues()
     {
-        totalPhysicalArmorVal = helmet.myArmorSO.physicalArmorVal + bodyArmor.myArmorSO.physicalArmorVal + gauntlets.myArmorSO.physicalArmorVal + belt.myArmorSO.physicalArmorVal + greaves.myArmorSO.physicalArmorVal + boots.myArmorSO.physicalArmorVal;
-        
-        totalMagicArmorVal = helmet.myArmorSO.magicArmorVal + bodyArmor.myArmorSO.magicArmorVal + gauntlets.myArmorSO.magicArmorVal + belt.myArmorSO.magicArmorVal + greaves.myArmorSO.magicArmorVal + boots.myArmorSO.magicArmorVal;
-        
-        totalStrengthVal = helmet.myArmorSO.strength + bodyArmor.myArmorSO.strength + gauntlets.myArmorSO.strength + belt.myArmorSO.strength + greaves.myArmorSO.strength + boots.myArmorSO.strength;
-        
-        totalDexterityVal = helmet.myArmorSO.dexterity + bodyArmor.myArmorSO.dexterity + gauntlets.myArmorSO.dexterity + belt.myArmorSO.dexterity + greaves.myArmorSO.dexterity + boots.myArmorSO.dexterity;
-        
-        totalIntelligenceVal = helmet.myArmorSO.intelligence + bodyArmor.myArmorSO.intelligence + gauntlets.myArmorSO.intelligence + belt.myArmorSO.intelligence + greaves.myArmorSO.intelligence + boots.myArmorSO.intelligence;
-        
-        totalLuckVal = helmet.myArmorSO.luck + bodyArmor.myArmorSO.luck + gauntlets.myArmorSO.luck + belt.myArmorSO.luck + greaves.myArmorSO.luck + boots.myArmorSO.luck;
+        totalPhysicalArmorVal = 0;
+        totalMagicArmorVal = 0;
+        totalStrengthVal = 0;
+        totalDexterityVal = 0;
+        totalEnduranceVal = 0;
+        totalVitalityVal = 0;
+        totalIntelligenceVal = 0;
+        totalLuckVal = 0;
+
+        foreach (var armor in GetEquippedArmor())
+        {
+            if (armor == null || armor.myArmorData == null) continue;
+
+            totalPhysicalArmorVal += armor.myArmorData.physicalDefense;
+            totalMagicArmorVal += armor.myArmorData.magicDefense;
+            totalStrengthVal += armor.myArmorData.strength;
+            totalDexterityVal += armor.myArmorData.dexterity;
+            totalEnduranceVal += armor.myArmorData.endurance;
+            totalVitalityVal += armor.myArmorData.vitality;
+            totalIntelligenceVal += armor.myArmorData.intelligence;
+            totalLuckVal += armor.myArmorData.luck;
+        }
     }
 
     public float GetJewelryDamageValue()
     {
-        return amulet.myJewelrySO.health + leftRing.myJewelrySO.health + rightRing.myJewelrySO.health;
+        return amulet.myJewelryData.bonusHealth + leftRing.myJewelryData.bonusHealth + rightRing.myJewelryData.bonusHealth;
     }
 }

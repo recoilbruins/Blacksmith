@@ -16,10 +16,10 @@
                 },
                 {
                     "name": "CameraRotation",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "9ab6a1ae-f2d3-468d-a10c-f678c239beb1",
                     "expectedControlType": "Vector2",
-                    "processors": "NormalizeVector2",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 }
@@ -96,7 +96,7 @@
                     "id": "d5a6fb6a-a663-4ca4-b001-046adc0182e0",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "StickDeadzone",
+                    "processors": "StickDeadzone,ScaleVector2(x=100,y=100)",
                     "groups": "",
                     "action": "CameraRotation",
                     "isComposite": false,
@@ -107,7 +107,7 @@
                     "id": "1807c773-1b56-4bf2-9828-0d8dffa46b6d",
                     "path": "<Pointer>/delta",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=0.1,y=0.1),DeltaTimeScale",
                     "groups": "",
                     "action": "CameraRotation",
                     "isComposite": false,
@@ -190,6 +190,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LockOn",
+                    "type": "Button",
+                    "id": "3755fd43-1b1e-4e24-a302-077d562b5b3a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchCameraTarget",
+                    "type": "PassThrough",
+                    "id": "bc981714-3b74-4d6f-9e21-5d0dd248f6e6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -355,6 +373,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwapWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72f339f6-6b03-411e-b68d-d7212c0a31b8",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockOn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d459964-7c68-44c8-b4f4-c78996fc7aa1",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockOn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d4de2eb-530a-43d7-a2af-70fb8530ac0e",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "ScaleVector2(x=0.05,y=0.05)",
+                    "groups": "",
+                    "action": "SwitchCameraTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bd237e94-b5c7-48f6-ae82-641adecb6502",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "SwitchCameraTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

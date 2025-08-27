@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700330cc1414e4f4eaa1dace897fde18, type: 3}
+  m_Name: PlayerCharacter
+  m_EditorClassIdentifier: 
+  gender: 0
+  race: 0
+  skinColor: 0
+  headCovering: 0
+  elements: 0
+  facialHair: 1
+  isWearingHelmet: 0
+  isWearingArmor: 0
+  head: 2
+  eyebrows: 0
+  facialHairIndex: 0
+  hair: 8
+  headCoveringIndex: 0
+  elfEar: 0
+  torso: 0
+  upperArmRight: 0
+  upperArmLeft: 0
+  lowerArmRight: 0
+  lowerArmLeft: 0
+  handRight: 0
+  handLeft: 0
+  hips: 0
+  legRight: 0
+  legLeft: 0
+  chestAttachment: 0
+  backAttachment: 0
+  shoulderRight: 0
+  shoulderLeft: 0
+  elbowRight: 0
+  elbowLeft: 0
+  hipsAttachment: 0
+  kneeRight: 0
+  kneeLeft: 0
+  bodyArtAmount: 0

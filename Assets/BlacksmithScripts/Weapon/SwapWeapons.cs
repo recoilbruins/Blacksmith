@@ -27,9 +27,9 @@ public class SwapWeapons : MonoBehaviour
     {
         //Sheath Current Weapon if it isn't already and then unsheath new one
 
-        if (newWeapon.weaponSO.weaponType == WeaponSO.WeaponType.TWOHANDWEAPON && equippedWeapons.currentWeapons.Length > 1)
+        if (newWeapon.weaponData.weaponType == WeaponType.TwoHanded && equippedWeapons.currentWeapons.Length > 1)
         {
-            characterModelWeaponController.
+            /*characterModelWeaponController.*/
             //Destroy(equippedWeapons.currentWeapons[1]);
         }
         Destroy(equippedWeapons.currentWeapons[0]);

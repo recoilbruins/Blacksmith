@@ -36,7 +36,7 @@ public class SetupShieldAttackAnimations : MonoBehaviour
     public void UpdateShieldAttackAnimationsToMainHandWeaponAttacks()
     {
         GetWeapons();
-        ChangeAnimationClip(animationNames, offHandWeapon.weaponSO.animatorOverrideController, mainHandWeapon.weaponSO.animatorOverrideController);
+        ChangeAnimationClip(animationNames, offHandWeapon.weaponData.animatorOverrideController, mainHandWeapon.weaponData.animatorOverrideController);
     }
 
     // This is for replacing the animation in the weapons animator override

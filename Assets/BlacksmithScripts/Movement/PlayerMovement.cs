@@ -8,17 +8,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float walkingSpeed = 1.5f;
     [SerializeField] private float runningSpeed = 5f;
     [SerializeField] private float sprintingSpeed = 7f;
-    [SerializeField] private float groundedRotationSpeed = 10f;
+    [SerializeField] private float groundedRotationSpeed = 15f;
+    [SerializeField] private float lockOnRotationSpeed = 15f;
 
 
     [HideInInspector]
-    public bool isGrounded;
+    public bool isGrounded = false;
     [HideInInspector]
     public bool isJumping;
     [HideInInspector]
     public bool isDodging;
     [HideInInspector]
     public bool isUsingRootMotion;
+    [HideInInspector]
+    public bool isLockedOn;
     [HideInInspector]
     private bool isBlocking;
 
@@ -37,16 +40,20 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dodge Force")]
     [SerializeField] private float dodgeForce;
 
-    bool isAnimationLocked = false;
-    bool checkForBeingStuck = false;
-    float timeElapsed = 0f;
+    private bool isAnimationLocked = false;
+    private bool checkForBeingStuck = false;
+    private float timeElapsed = 0f;
+
+    [Header("Lock on Target")]
+    public Transform lockOnTarget;
+
 
     public Rigidbody rb;
     
-    AnimationManager animationManager;
+    private AnimationManager animationManager;
 
-    Transform cam;
-    Vector3 moveDirection;
+    private Transform cam;
+    private Vector3 moveDirection;
 
     private void Awake()
     {
@@ -85,22 +92,31 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    public void UpdateAllMovement(float moventSpeedMultiplier)
+    public void UpdateAllMovement(float movementSpeedMultiplier)
     {
         HandleFallingAndLanding();
         if (isAnimationLocked) { return; }
-        Movement(moventSpeedMultiplier);
-        Rotation();
+        if(!isLockedOn || InputManager.instance.isSprintPressed)
+        {
+            NormalMovement(movementSpeedMultiplier);
+            NormalRotation();
+        }
+        else
+        {
+            NormalMovement(movementSpeedMultiplier);
+            LockOnRotation();
+        }
         Jump();
         Dodge();
     }
 
-    private void Movement(float moventSpeedMultiplier)
+    private void NormalMovement(float moventSpeedMultiplier)
     {
         if (isJumping)
         {
             return;
         }
+
         moveDirection = cam.transform.forward * InputManager.instance.vertical;
         moveDirection = moveDirection + cam.right * InputManager.instance.horizontal;
         moveDirection.y = 0;
@@ -130,7 +146,9 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void Rotation()
+
+
+    private void NormalRotation()
     {
         if (isJumping) { return; }
 
@@ -156,43 +174,73 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void LockOnRotation()
+    {
+        Vector3 direction = lockOnTarget.position - transform.position;
+        direction.y = 0f; // Ignore vertical difference
+
+        if (direction == Vector3.zero) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion smoothedRotation = Quaternion.Slerp(transform.rotation, targetRotation, lockOnRotationSpeed * Time.deltaTime);
+
+        // Apply only Y-axis rotation
+        transform.rotation = Quaternion.Euler(0f, smoothedRotation.eulerAngles.y, 0f);
+    }
+
     public void HandleFallingAndLanding()
     {
         RaycastHit raycastHit;
-        Vector3 rayCastOrigin = transform.position;
-        Vector3 targetPosition;
-        rayCastOrigin.y += rayCastHeight;
-        targetPosition = transform.position;
+        Vector3 rayCastOrigin = transform.position + Vector3.up * rayCastHeight;
+        Vector3 targetPosition = transform.position;
+
+        bool wasGrounded = isGrounded;
+        isGrounded = Physics.SphereCast(rayCastOrigin, raycastRadius, Vector3.down, out raycastHit, rayCastHeight, groundLayer);
+        bool isAboutToLand = false;
 
         if (!isGrounded && !isJumping)
         {
+            float predictionDistance = 1.5f + (rb.linearVelocity.y * Time.deltaTime); // slightly adaptive
+
+            if (Physics.SphereCast(rayCastOrigin, raycastRadius, Vector3.down, out raycastHit, predictionDistance, groundLayer))
+            {
+                isAboutToLand = true;
+            }
+
             if (!isAnimationLocked && airTimer > 0.2f)
             {
                 animationManager.PlayAnimation("Falling", isAnimationLocked: true);
             }
 
-            animationManager.animator.SetBool("isUsingRootMotion", false);
-            airTimer = airTimer + Time.deltaTime;
-            rb.AddForce(transform.forward * leapingVelocity);
-            rb.AddForce(-Vector3.up * fallingSpeed * airTimer);
-
-        }
-
-        if (Physics.SphereCast(rayCastOrigin, raycastRadius, -Vector3.up, out raycastHit, rayCastHeight, groundLayer))
-        {
-            if (!isGrounded && isAnimationLocked)
+            if (isAboutToLand)
             {
+                animationManager.PlayAnimation("Land", isAnimationLocked: true, transitionDuration: 0f, isUsingRootMotion: true);
                 //animationManager.animator.SetBool("isGrounded", true);
-                animationManager.PlayAnimation("Land", isAnimationLocked: true, isUsingRootMotion: true);
             }
-            Vector3 rayCastHitPoint = raycastHit.point;
-            targetPosition.y = rayCastHitPoint.y;
-            isGrounded = true;
-            airTimer = 0;
+
+            animationManager.animator.SetBool("isUsingRootMotion", false);
+            airTimer += Time.deltaTime;
+
+            rb.AddForce(transform.forward * leapingVelocity, ForceMode.Acceleration);
+            rb.AddForce(Vector3.down * fallingSpeed * airTimer, ForceMode.Acceleration);
         }
+
         else
         {
-            isGrounded = false;
+            if (!wasGrounded && isAnimationLocked)
+            {
+                // Just landed
+                animationManager.PlayAnimation("Land", isAnimationLocked: true, isUsingRootMotion: true);
+                // Optional: pass airTimer as a fallDistance to scale land impact
+                // animationManager.animator.SetFloat("fallDistance", airTimer);
+            }
+
+            // Snap position to ground if needed
+            if (isGrounded)
+            {
+                targetPosition.y = raycastHit.point.y;
+                airTimer = 0f;
+            }
         }
 
         if (isGrounded && !isJumping)
@@ -218,7 +266,7 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded && isJumping)
             {
                 isJumping = false;
-                animationManager.PlayAnimation("Falling", isAnimationLocked: true);
+                //animationManager.PlayAnimation("Falling", isAnimationLocked: true, transitionDuration:0f);
                 checkForBeingStuck = false;
                 timeElapsed = 0f;
             }
@@ -257,13 +305,41 @@ public class PlayerMovement : MonoBehaviour
         }
         if(InputManager.instance.isDodgePressed)
         {
-            if(InputManager.instance.moveAmount > 0)
+            if (isLockedOn)
             {
-                animationManager.PlayAnimation("RollForwardBase", isAnimationLocked: true, isUsingRootMotion:true, isDodging:true);
+                if (InputManager.instance.horizontal >= 0.5f)
+                {
+                    animationManager.PlayAnimation("RollRightBase", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                else if (InputManager.instance.horizontal <= -0.5f)
+                {
+                    animationManager.PlayAnimation("RollLeftBase", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                else if (InputManager.instance.vertical > 0.5f)
+                {
+                    animationManager.PlayAnimation("RollForwardBase", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                else if (InputManager.instance.vertical < -0.5f)
+                {
+                    animationManager.PlayAnimation("RollBackwardBase", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                else
+                {
+                    animationManager.PlayAnimation("BackStep", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                // animationManager.PlayAnimation("BaseRoll", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+
             }
             else
             {
-                animationManager.PlayAnimation("BackStep", isAnimationLocked: true, isUsingRootMotion:true, isDodging:true);
+                if (InputManager.instance.moveAmount > 0)
+                {
+                    animationManager.PlayAnimation("RollForwardBase", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
+                else
+                {
+                    animationManager.PlayAnimation("BackStep", isAnimationLocked: true, isUsingRootMotion: true, isDodging: true);
+                }
             }
             InputManager.instance.isDodgePressed = false;
         }
@@ -271,9 +347,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Vector3 pos = transform.position;
-        pos.y -= rayCastHeight;
-        Gizmos.DrawWireSphere(pos, raycastRadius);
+        Vector3 origin = transform.position + Vector3.up * rayCastHeight;
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(origin, origin + Vector3.down * rayCastHeight);
+        Gizmos.DrawWireSphere(origin + Vector3.down * rayCastHeight, raycastRadius);
     }
 }

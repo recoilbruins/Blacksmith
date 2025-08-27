@@ -10,6 +10,7 @@ public class WeaponCollision : MonoBehaviour
         if(other.gameObject.CompareTag(TARGET))
         {
             collidedWithTarget = true;
+            Debug.Log($"Weapon collided with target: {other.gameObject.name}");
         }
     }
 }
